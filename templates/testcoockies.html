@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+ 
+{% block content %}
+{{ super() }}
+	<button type="button" onclick="t1()">test 1</button>
+	<button type="button" onclick="t2()">test 2</button>
+
+
+
+	<script type="text/javascript">
+
+		function t1(){
+			if (navigator.cookieEnabled === false){
+				alert("Cookies отключены!");
+			}
+			document.cookie = "name=user";
+		}
+
+		function t2(){
+			console.log(getCookie('name')); // user
+		}
+
+
+		function getCookie(name) {
+			var matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
+			return matches ? decodeURIComponent(matches[1]) : undefined;
+		}	
+	</script>
+{% endblock %}

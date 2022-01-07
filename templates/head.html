@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/basestyle.css')}}">
+</head>
+<header>
+	<nav class="navbar">
+		<div id="marker"></div>
+		<a href="#">Курсы</a>
+		<a href="#">Настройки</a>
+		<a href="#">Преподователям</a>
+		<a href="#">Акаунт</a>
+		<a href="#">О приложении</a>
+	</nav>
+</header>
+<body>
+
+
+<script type="text/javascript">
+	
+	var marker = document.querySelector('#marker');
+	var item = document.querySelectorAll('nav a');
+
+	function indicator (e) {
+		marker.style.left = e.offsetLeft+"px";
+		marker.style.width = e.offsetWidth+"px";
+	}
+
+	item.forEach(link => {
+	  link.addEventListener('click', (e) => {
+	  	indicator(e.target);
+	  });
+	})
+
+</script>
+
+</body>
+</html>

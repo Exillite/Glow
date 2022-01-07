@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+ 
+{% block content %}
+{{ super() }}
+
+
+{% if emconf %}
+
+<p class="center-text">Вы успешно зарегестрировались.<br>
+<a href="/">На главную.</a></p>
+
+{% else %}
+<p class="center-text">На Вашу почту отправлено письмо. Для завершения регистрации прейдите по ссылке в нём.</p>
+{% endif %}
+
+{% endblock %}

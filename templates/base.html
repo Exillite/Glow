@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/basestyle.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+	{% if title %}
+        <title>{{title}}</title>
+	{% else %}
+		<title>Glow</title>
+	{% endif %}
+</head>
+{% if nb %}
+<header>
+	<nav class="navbar">
+		<div id="marker"></div>
+		<a href="#">Курсы</a>
+		<a href="#">Настройки</a>
+		<a href="#">Преподователям</a>
+		<a href="#">Акаунт</a>
+		<a href="#">О приложении</a>
+	</nav>
+</header>
+
+
+
+
+{% else %}
+{% endif %}
+
+<body>
+	<script type="text/javascript">
+		var myip = 'http://127.0.0.1:5000';
+	</script>
+
+{% if is_logined %}
+	<script type="text/javascript">
+		console.log('in js')
+		function gC(name) {
+			var matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
+			return matches ? decodeURIComponent(matches[1]) : undefined;
+		}
+
+		if (gC("is_login") == undefined) {
+			console.log("in if");
+			window.location.href = myip + '/login';
+		}
+	</script>
+{% else %}
+{% endif %}
+
+{% block content -%}
+
+{% endblock -%}
+
+
+<div id="notification-area">
+</div>
+
+<script type="text/javascript">
+	
+	var marker = document.querySelector('#marker');
+	var item = document.querySelectorAll('nav a');
+
+	function indicator (e) {
+		marker.style.left = e.offsetLeft+"px";
+		marker.style.width = e.offsetWidth+"px";
+	}
+
+	item.forEach(link => {
+	  link.addEventListener('mouseover', (e) => {
+	  	indicator(e.target);
+	  });
+	})
+
+
+
+function notify(type,message){
+  (()=>{
+    let n = document.createElement("div");
+    let id = Math.random().toString(36).substr(2,10);
+    n.setAttribute("id",id);
+    n.classList.add("notification",type);
+    n.innerText = message;
+    document.getElementById("notification-area").appendChild(n);
+    setTimeout(()=>{
+      var notifications = document.getElementById("notification-area").getElementsByClassName("notification");
+      for(let i=0;i<notifications.length;i++){
+        if(notifications[i].getAttribute("id") == id){
+          notifications[i].remove();
+          break;
+        }
+      }
+    },5000);
+  })();
+}
+
+
+</script>
+
+</body>
+</html>
