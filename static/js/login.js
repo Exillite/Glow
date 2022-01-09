@@ -22,7 +22,7 @@ function login(){
 }
 
 function vE(email) {
-  if (email == null) {
+  if (email === null) {
     return false;
   }
   var re = /\S+@\S+\.\S+/;
