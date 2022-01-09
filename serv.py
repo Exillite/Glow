@@ -38,7 +38,8 @@ class Courses(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     description = db.Column(db.String(50))
-    author = db.Column(db.String(50))
+    author_id = db.Column(db.String(300))
+    is_public = db.Column(db.Boolean)
  
     def __repr__(self):
         return f"<course {self.id}>"
@@ -66,7 +67,7 @@ class Blocks(db.Model):
     example_out = db.Column(db.String(250))
  
     def __repr__(self):
-        return f"<users {self.id}>"
+        return f"<block {self.id}>"
 
 class User2Course(db.Model):
     user_id = db.Column(db.Integer)
@@ -76,9 +77,9 @@ class User2Course(db.Model):
 
 
 def testemail(email, tok):
-    addr_from = "noreply@exillite.xyz"                 # Адресат
+    addr_from = "noreply@exillite.xyz"  # Адресат
     addr_to   = email                   # Получатель
-    password  = "16188_sasa"                                  # Пароль
+    password  = "16188_sasa"            # Пароль
 
     msg = MIMEMultipart()                               # Создаем сообщение
     msg['From']    = addr_from                          # Адресат
@@ -220,7 +221,7 @@ def api():
             crs = []
             for i in courses_ids:
                 c = Courses.query.filter_by(id = i.id).first()
-                dic = {'id': c.id, 'name': c.name, 'description': c.description, 'author': c.author}
+                dic = {'id': c.id, 'name': c.name, 'description': c.description, 'author_id': c.author_id}
                 crs.append(dic)
             r['count'] = len(crs)
             r['courses'] = crs
@@ -284,6 +285,44 @@ def api():
 
             r['count'] = len(bl)
             r['blocks'] = bl
+
+            r['status'] = 'OK'
+
+        except Exception as e:
+            print('!!>>>>' + str(e))
+            db.session.rollback()
+            r['status'] = 'ERROR'
+        
+        return json.dumps(r)
+
+
+    elif j['method'] == 'get_my_courses':
+        r = {}
+        try:
+            student_id = Users.query.filter_by(token = j['token']).first().id
+            r['token'] = j['token']
+            courses_ids = User2Course.query.filter_by(author_id = student_id).all()
+            crs = []
+            for i in courses_ids:
+                c = Courses.query.filter_by(id = i.id).first()
+                dic = {'id': c.id, 'name': c.name, 'description': c.description, 'author_id': c.author_id}
+                crs.append(dic)
+            r['count'] = len(crs)
+            r['courses'] = crs
+            r['status'] = 'OK'
+
+        except Exception as e:
+            print('!!>>>>' + str(e))
+            db.session.rollback()
+            r['status'] = 'ERROR'
+        
+        return json.dumps(r)
+
+    elif j['method'] == 'add_course':
+        r = {}
+        try:
+            a_id = Users.query.filter_by(token = j['token']).first().id
+            с = Courses(name=j['name'], description=j['description'], author_id=a_id, is_public=j['is_public'])
 
             r['status'] = 'OK'
 
