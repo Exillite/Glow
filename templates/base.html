@@ -16,12 +16,20 @@
 <header>
 	<nav class="navbar">
 		<div id="marker"></div>
-		<a href="#">Курсы</a>
+		<a href="/courses">Курсы</a>
 		<a href="#">Настройки</a>
 		<a href="#">Преподователям</a>
 		<a href="#">Акаунт</a>
 		<a href="#">О приложении</a>
 	</nav>
+	<style>
+   .header-hr {
+    border: none; /* Убираем границу */
+    background-color: #1E144D; /* Цвет линии */
+    color: red; /* Цвет линии для IE6-7 */
+    height: 1px; /* Толщина линии */
+   }
+  </style>
 </header>
 
 
@@ -31,6 +39,8 @@
 {% endif %}
 
 <body>
+<hr class="header-hr">
+<br>
 	<script type="text/javascript">
 		var myip = 'http://127.0.0.1:5000';
 	</script>

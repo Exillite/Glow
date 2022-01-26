@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+ 
+{% block content %}
+{{ super() }}
+
+<div class="courses">
+    <div class="courses-list">
+        <div>
+            <div class="course-list-item">
+                <image class="courses-avatar" src="{{ url_for('static', filename='img/vk.png')}}"></image>
+                <h4 class="courses-name">Курс 1</h4>
+                <h6 class="courses-author">Родионов Александр</h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

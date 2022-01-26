@@ -169,3 +169,16 @@ span{
     border-radius: 5px;
     box-shadow: 0 0 20px 9px #07575B; 
 }
+
+.courses-list{
+
+}
+
+.course-list-item{
+    height: 250px;
+    weight: 350px;
+    margin: 1em;
+    float: left;
+    padding: 20px;
+    border: 2px  solid;
+}
