@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="550bf9c8-4697-4c2e-82b3-25b18cf8a56f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/basestyle.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/basestyle.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/courses.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/courses.html" afterDir="false" />
     </list>
@@ -78,9 +77,21 @@
       <option name="presentableId" value="Default" />
       <updated>1642261603108</updated>
     </task>
+    <task id="LOCAL-00001" summary="start courses.html">
+      <created>1643224383798</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1643224383798</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.css" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="start courses.html" />
+    <option name="LAST_COMMIT_MESSAGE" value="start courses.html" />
   </component>
 </project>

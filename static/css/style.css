@@ -1,19 +1,19 @@
-*{
+* {
     margin: 0;
     padding: 0;
     font-family: sans-serif;
 }
 
-.hero{
+.hero {
     height: 100%;
     width: 100%;
     background-color: #003B46;
     background-position: center;
     background-size: cover;
     position: absolute;
-} 
+}
 
-.form-box{
+.form-box {
     width: 380px;
     height: 480px;
     position: relative;
@@ -24,7 +24,7 @@
     transition: .5s;
 }
 
-.button-box{
+.button-box {
     width: 234px;
     margin: 35px auto;
     position: relative;
@@ -32,17 +32,16 @@
     border-radius: 30px;
 }
 
-.toggle-btn{
+.toggle-btn {
     padding: 10px 30px;
     cursor: pointer;
     background: transparent;
     border: 0;
     outline: none;
     position: relative;
-
 }
 
-#btn{
+#btn {
     top: 0;
     left: 0;
     position: absolute;
@@ -53,12 +52,12 @@
     transition: .5s;
 }
 
-.social-icos{
+.social-icos {
     margin: 30px auto;
     text-align: center;
 }
 
-.social-icos img{
+.social-icos img {
     width: 30px;
     margin: 0 12px;
     box-shadow: 0 0 20px 0 #7f7f7f3d;
@@ -66,14 +65,14 @@
     border-radius: 50%;
 }
 
-.input-group{
+.input-group {
     top: 180px;
     position: absolute;
     width: 280px;
     transition: .5s;
 }
 
-.input-field{
+.input-field {
     width: 100%;
     padding: 10px 0;
     margin: 5px 0;
@@ -85,7 +84,7 @@
     background: transparent;
 }
 
-.submit-btn{
+.submit-btn {
     width: 85%;
     padding: 10px 30px;
     cursor: pointer;
@@ -97,32 +96,30 @@
     border-radius: 30px;
 }
 
-.check-box{
+.check-box {
     margin: 30px 10px 30px 0;
 }
 
-
-body{
+body {
     background: #f0f8ff;
 }
 
-span{
+span {
     color: #777;
     font-size: 12px;
     bottom: 68px;
     position: absolute;
 }
 
-#login{
+#login {
     left: 50px;
 }
 
-#register{
+#register {
     left: 450px;
 }
 
-
-#notification-area{
+#notification-area {
     position: fixed;
     top: 0px;
     right: 10px;
@@ -133,7 +130,7 @@ span{
     justify-content: flex-end;
 }
 
-#notification-area .notification{
+#notification-area .notification {
     padding: 15px 10px;
     background: #111;
     color: #f5f5f5;
@@ -143,22 +140,19 @@ span{
     margin: 5px 0px;
 }
 
-#notification-area .notification.success{
+#notification-area .notification.success {
     background: #389838;
-
 }
 
-#notification-area .notification.error{
+#notification-area .notification.error {
     background: orangered;
-    
 }
 
-#notification-area .notification.info{
+#notification-area .notification.info {
     background: #00acee;
-    
 }
 
-.center-text{
+.center-text {
     text-align: center;
     margin-top: 10%;
     margin-left: auto;
@@ -167,33 +161,41 @@ span{
     width: 700px;
     height: 42px;
     border-radius: 5px;
-    box-shadow: 0 0 20px 9px #07575B; 
+    box-shadow: 0 0 20px 9px #07575B;
 }
 
-.courses-list{
-
+.container {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+    flex-wrap: wrap;
+    background-color: #e0effc;
 }
 
-.course-list-item{
-    margin: 1em;
-    height: 220px;
-    weight: 450px;
-    float: left;
-    padding: 20px;
-    border: 2px  solid;
+.card {
+    margin-left: 10px;
+    background-color: rgb(19, 99, 190);
+    width: 300px;
+    padding: 10px;
+}
+
+.card .imgContainer {
+    width: 100%;
+    height: 200px;
+    border: 1px dashed rgba(70, 70, 70, 0.986);
+    overflow: hidden;
     position: relative;
-
 }
 
-.course-info{
-    border: 2px solid;
-    position: absolute;
-    left:0;
-    right:0;
-    top:165px;
-    bottom:0;
+.card .imgContainer img {
+    width: 100%;
 }
 
-.courses-avatar{
-
+.infoBox .title {
+    font-weight: 200;
+    color: #111;
+    margin-bottom: 5px;
+    margin-left: 5px;
 }
