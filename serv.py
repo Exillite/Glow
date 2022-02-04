@@ -175,6 +175,10 @@ def cr():
 def courses():
     return render_template('courses.html', nb=True)
 
+@app.route("/course/<id>")
+def course(id):
+    return render_template('course.html', nb=True)
+
 
 @app.route('/api', methods=['GET', 'POST'])
 def api():

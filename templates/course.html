@@ -1,0 +1,40 @@
+{% extends 'base.html' %} {% block content %} {{ super() }}
+<div class="blok-blocks">
+    <div class="context">
+        <div class="course-info">
+            <div class="course-img"></div>
+            <div class="course-name">Название некого курса</div>
+            <div class="course-descrption">Описание самого обычного курса не понятно тольео зачем оно сдесь ведь и без него всё понятно</div>
+        </div>
+        <div class="blocks-list">
+            <div class="block-item">
+                <svg class="progress-ring" width="120" height="60">
+                    <circle
+                        class="progress-ring__circle"
+                        id="notwell"
+                        stroke="#FF2B2B"
+                        fill="#767B7D"
+                        stroke-width="10"
+                        r="20"
+                        cx="60"
+                        cy="40"/>
+
+                    <circle
+                        class="progress-ring__circle"
+                        id="well"
+                        stroke="#53EB46"
+                        stroke-width="10"
+                        fill="transparent"
+                        r="20"
+                        cx="60"
+                        cy="40"/>
+                </svg>
+            </div>
+            <div class="block-item-count">9/12</div>
+            <div class="block-item-name">Название блока</div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/blocks.js')}}"></script>
+{%endblock %}

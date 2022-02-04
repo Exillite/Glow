@@ -1,19 +1,25 @@
 {% extends 'base.html' %} {% block content %} {{ super() }}
 
-<div class="container">
 
-    <div class="card">
+
+<div class="container" id="listWithHandle">
+    {% for i in range(11) %}
+    <div class="card list-group-item glyphicon glyphicon-move" id="card_{{ i }}" onclick="gotoCourse({{ i }})">
         <div class="imgContainer">
             <img src="{{ url_for('static', filename='img/tets.jpg')}}" alt="">
         </div>
         <div class="infoBox">
             <div class="rating"></div>
-            <h2 class="title">Курс 1</h2>
+            <h2 class="title">Курс {{ i }}</h2>
             <h5 class="author-name">Родионов Александр</h5>
         </div>
     </div>
-
-
+    {% endfor %}
 </div>
+
+<script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script>
+
+<script src="{{ url_for('static', filename='js/courses.js')}}"></script>
+
 
 {% endblock %}

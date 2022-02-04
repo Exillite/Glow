@@ -15,12 +15,12 @@
 </head>
 {% if nb %}
 <header>
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div id="marker"></div>
         <a href="/courses">Курсы</a>
         <a href="#">Настройки</a>
         <a href="#">Преподователям</a>
-        <a href="#">Акаунт</a>
+        <a href="#">Аккаунт</a>
         <a href="#">О приложении</a>
     </nav>
     <style>
@@ -66,22 +66,29 @@
     </script>
     {% else %} {% endif %} {% block content -%} {% endblock -%}
 
-
     <div id="notification-area">
     </div>
 
     <script type="text/javascript">
         var marker = document.querySelector('#marker');
-        var item = document.querySelectorAll('nav a');
+        var item = document.querySelectorAll('#navbar a');
 
         function indicator(e) {
+            marker.style.visibility = 'visible';
             marker.style.left = e.offsetLeft + "px";
             marker.style.width = e.offsetWidth + "px";
+        }
+
+        function disindicate(e) {
+            marker.style.visibility = 'hidden';
         }
 
         item.forEach(link => {
             link.addEventListener('mouseover', (e) => {
                 indicator(e.target);
+            });
+            link.addEventListener('mouseout', (e) => {
+                disindicate(e.target);
             });
         })
 

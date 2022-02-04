@@ -1,36 +1,33 @@
-{% extends 'base.html' %}
- 
-{% block content %}
-{{ super() }}
+{% extends 'base.html' %} {% block content %} {{ super() }}
 <div class="hero">
-	<div class="form-box" id="formbox">
-		<div class="button-box">
-			<div id="btn"></div>
-			<button type="button" class="toggle-btn" onclick="login()">Вход</button>
-			<button type="button" class="toggle-btn" onclick="register()">Регистрация</button>
-		</div>
-		<!--
+    <div class="form-box" id="formbox">
+        <div class="button-box">
+            <div id="btn"></div>
+            <button type="button" class="toggle-btn" onclick="login()">Вход</button>
+            <button type="button" class="toggle-btn" onclick="register()">Регистрация</button>
+        </div>
+        <!--
 		<div class="social-icos">
 			<img src="{{ url_for('static', filename='img/vk.png')}}">
 			<img src="{{ url_for('static', filename='img/gp.png')}}">
 			<img src="{{ url_for('static', filename='img/yx.png')}}">
 		</div> -->
-		<form id="login" class="input-group">
-			<input type="email" id="lemail" class="input-field" placeholder="E-mail" required>
-			<input type="password" id="lpassword" class="input-field" placeholder="Пароль" required>
-			<input type="checkbox" id="lcheckbox" class="check-box"><span>Оставаться в системе</span>
-			<button type="button" id="lbtn" class="submit-btn" onclick="sendLogin()"><b>Войти</b></button>
-		</form>
-		<form id="register" class="input-group">
-			<input type="text" id="rname" class="input-field" placeholder="Имя" required>
-			<input type="text" id="rsurname" class="input-field" placeholder="Фамилия" required>
-			<input type="email" id="remail" class="input-field" placeholder="E-mail" required>
-			<input type="password" id="rpassword" class="input-field" placeholder="Пароль" required>
-			<input type="password" id="rpasswordtoo" class="input-field" placeholder="Повторите пароль" required>
-			<input type="checkbox" id="rcheckbox" class="check-box"><span>Согласен с <a href="#">пользовательским соглашением</a></span>
-			<button type="button" class="submit-btn" id="rbtn" onclick="sendReg()"><b>Регистрация</b></button>
-		</form>
-	</div>
+        <form id="login" class="input-group">
+            <input type="email" id="lemail" class="input-field" placeholder="E-mail" required>
+            <input type="password" id="lpassword" class="input-field" placeholder="Пароль" required>
+            <input type="checkbox" id="lcheckbox" class="check-box"><span class="sp-check">Оставаться в системе</span>
+            <button type="button" id="lbtn" class="submit-btn" onclick="sendLogin()"><b>Войти</b></button>
+        </form>
+        <form id="register" class="input-group">
+            <input type="text" id="rname" class="input-field" placeholder="Имя" required>
+            <input type="text" id="rsurname" class="input-field" placeholder="Фамилия" required>
+            <input type="email" id="remail" class="input-field" placeholder="E-mail" required>
+            <input type="password" id="rpassword" class="input-field" placeholder="Пароль" required>
+            <input type="password" id="rpasswordtoo" class="input-field" placeholder="Повторите пароль" required>
+            <input type="checkbox" id="rcheckbox" class="check-box"><span class="sp-check">Согласен с <a href="#">пользовательским соглашением</a></span>
+            <button type="button" class="submit-btn" id="rbtn" onclick="sendReg()"><b>Регистрация</b></button>
+        </form>
+    </div>
 </div>
 
 
