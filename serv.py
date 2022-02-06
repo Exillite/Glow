@@ -2,6 +2,8 @@ from flask import *
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import DATA
+import sqlite3
+import question
 
 import json
 
@@ -18,7 +20,37 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///glow.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-myip = "http://127.0.0.1:5000"
+
+
+quests2st = []
+quests2st.append(question.Qeston2Students('1', 'Нравится ли вам, как организован формат дистанционного обучения в вашей школе?', ['Да', 'Скорее да, чем нет', 'Скорее нет, чем да', 'Нет']))
+quests2st.append(question.Qeston2Students('2', 'Какие ключевые факторы вы бы хотели поменять в дистанционной форме проведения занятий?', ['Меня все устраивает', 'Плохо проводятся онлайн занятия', 'Неструктурированное д/з', 'Неполноценно дается материал']))
+quests2st.append(question.Qeston2Students('3', 'Обучайтесь ли вы в интернете?', ['Да', 'Скорее да, чем нет', 'Скорее нет, чем да', 'Нет']))
+quests2st.append(question.Qeston2Students('4', 'Как вы считайте, образовательная платформа (например, Stepik, Moodle или GoogleClass) способствуют улучшению обучения в интернете?', ['Да', 'Скорее да, чем нет', 'Скорее нет, чем да', 'Нет']))
+quests2st.append(question.Qeston2Students('5', 'Что для вас самое главное в образовательной платформе?', ['Наличие онлайн конференций с преподавателем', 'Качественная и быстрая проверка заданий', 'Красивый дизайн и удобный интерфейс', 'Наличие как веб сервиса, так и десктоп приложения', 'Возможность задать преподавателю вопрос в письменном виде']))
+quests2st.append(question.Qeston2Students('6', 'Вы бы хотели, что бы дистанционный формат обучения в вашей школе проходил на подобной, оптимизированной для этого системе?', ['Да', 'Скорее да, чем нет', 'Скорее нет, чем да', 'Нет']))
+
+
+quests2tch = []
+quests2tch.append(question.Qeston2Teachers('1', 'Что бы вы хотели изменить в формате дистанционного обучения?'))
+quests2tch.append(question.Qeston2Teachers('2', 'Как вы считайте, обр платформа улучшит дистанционное обучение?'))
+quests2tch.append(question.Qeston2Teachers('3', 'Что для вас важно в образовательной платформе?'))
+quests2tch  .append(question.Qeston2Teachers('4', 'Как вы думайте, наша платформа улучшит самостоятельное и дистанционное обучение школьников?'))
+
+
+myip = "http://exillite.xyz/"
+
+
+def connect_db():
+    conn = sqlite3.connect("mydatabase.db")
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def get_db():
+    '''Соединение с БД, если оно еще не установлено'''
+    if not hasattr(g, 'link_db'):
+        g.link_db = connect_db()
+    return g.link_db
 
 
 class Users(db.Model):
@@ -171,6 +203,14 @@ def cr():
     return 'OK'
 
 
+@app.route("/adminka")
+def adminka():
+    db = get_db()
+    cursor = db.cursor()
+
+
+    return render_template('adminka.html')
+
 @app.route("/courses")
 def courses():
     return render_template('courses.html', nb=True)
@@ -178,6 +218,38 @@ def courses():
 @app.route("/course/<id>")
 def course(id):
     return render_template('course.html', nb=True)
+
+@app.route("/questions", methods=["POST", "GET"])
+def questions():
+    if request.method == 'POST':
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(f"""INSERT INTO students_answers
+            VALUES ('{request.form['1']}', '{request.form['2']}', '{request.form['3']}', '{request.form['4']}', '{request.form['5']}', '{request.form['6']}')"""
+        )
+        db.commit()
+        return redirect(url_for('snxpage'))
+
+    return render_template('questions.html', questions=quests2st)
+
+@app.route("/questionsforteachers", methods=["POST", "GET"])
+def questions_teachers():
+    if request.method == 'POST':
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(f"""INSERT INTO teachers_answers
+            VALUES ('{request.form['1']}', '{request.form['2']}', '{request.form['3']}', '{request.form['4']}')"""
+        )
+        db.commit()
+        return redirect(url_for('snxpage'))
+
+
+    return render_template('questions_teachers.html', questions=quests2tch)
+
+
+@app.route("/snxpage")
+def snxpage():
+    return render_template('snxpage.html')
 
 
 @app.route('/api', methods=['GET', 'POST'])
@@ -195,7 +267,7 @@ def api():
             db.session.add(u)
             db.session.flush()
             db.session.commit()
-            testemail(j['email'], token)
+            #testemail(j['email'], token)
             return 'OK'
         except Exception as e:
             print('!!>>>>' + str(e))
@@ -344,4 +416,4 @@ def api():
         return json.dumps(r)
 
 
-app.run(debug=True)
+app.run(host="0.0.0.0", debug=True)

@@ -6,10 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="550bf9c8-4697-4c2e-82b3-25b18cf8a56f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/404.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/404.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/courses.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/courses.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/glow.db" beforeDir="false" afterPath="$PROJECT_DIR$/glow.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/serv.py" beforeDir="false" afterPath="$PROJECT_DIR$/serv.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
