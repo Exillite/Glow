@@ -290,6 +290,7 @@ def api():
                 else:
                     return 'NOTACTIVE'
                 '''
+                return 'id=' + u.token
             else:
                 return 'PAS'
 
