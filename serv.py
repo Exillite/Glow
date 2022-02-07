@@ -14,7 +14,7 @@ from email.mime.multipart import MIMEMultipart  # Многокомпонентн
 from email.mime.text import MIMEText  # Текст/HTML
 
 # from email.mime.image import MIMEImage  # Изображения
-
+#HVoW%kA%3q*y
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///glow.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -28,7 +28,7 @@ quests2st.append(question.Qeston2Students('2', 'Какие ключевые фа
 quests2st.append(question.Qeston2Students('3', 'Обучайтесь ли вы в интернете?', ['Да', 'Скорее да, чем нет', 'Скорее нет, чем да', 'Нет']))
 quests2st.append(question.Qeston2Students('4', 'Как вы считайте, образовательная платформа (например, Stepik, Moodle или GoogleClass) способствуют улучшению обучения в интернете?', ['Да', 'Скорее да, чем нет', 'Скорее нет, чем да', 'Нет']))
 quests2st.append(question.Qeston2Students('5', 'Что для вас самое главное в образовательной платформе?', ['Наличие онлайн конференций с преподавателем', 'Качественная и быстрая проверка заданий', 'Красивый дизайн и удобный интерфейс', 'Наличие как веб сервиса, так и десктоп приложения', 'Возможность задать преподавателю вопрос в письменном виде']))
-quests2st.append(question.Qeston2Students('6', 'Вы бы хотели, что бы дистанционный формат обучения в вашей школе проходил на подобной, оптимизированной для этого системе?', ['Да', 'Скорее да, чем нет', 'Скорее нет, чем да', 'Нет']))
+quests2st.append(question.Qeston2Students('6', 'Вы бы хотели, что бы дистанционный формат обучения в вашей школе проходил на подобной (Stepik, Moodle), оптимизированной для этого системе?', ['Да', 'Скорее да, чем нет', 'Скорее нет, чем да', 'Нет']))
 
 
 quests2tch = []
@@ -207,9 +207,10 @@ def cr():
 def adminka():
     db = get_db()
     cursor = db.cursor()
-
-
-    return render_template('adminka.html')
+    sqlt = "SELECT count(*) FROM students_answers"
+    cursor.execute(sqlt)
+    col = int(cursor.fetchall()[0][0])
+    return render_template('adminka.html', studentscol=col)
 
 @app.route("/courses")
 def courses():
@@ -281,12 +282,14 @@ def api():
             u = Users.query.filter_by(email=j['email']).first()
 
             if check_password_hash(u.password, j['password']):
+                '''
                 if j['is_active']:
                     if j['stay']:
                         pass
                     return 'id=' + u.token
                 else:
                     return 'NOTACTIVE'
+                '''
             else:
                 return 'PAS'
 
@@ -415,5 +418,5 @@ def api():
 
         return json.dumps(r)
 
-
-app.run(host="0.0.0.0", debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", debug=True)

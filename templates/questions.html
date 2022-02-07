@@ -89,6 +89,7 @@
             }
         }
     </style>
+
 </head>
 
 <body>
@@ -105,7 +106,7 @@
                     <label>{{ q.text }}</label>
                 </div>
                 <div class="col-75">
-                    <select id="{{ q.name }}" name="{{ q.name }}" required="required" onchange='findOption(this)'>
+                    <select id="{{ q.name }}" name="{{ q.name }}" required="required">
                         <option value="" selected disabled hidden>Выбирете ответ</option>
                         {% for a in q.answers %}
                         <option>{{ a }}</option>
