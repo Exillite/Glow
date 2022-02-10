@@ -1,3 +1,4 @@
+from re import T
 from flask import *
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -251,6 +252,16 @@ def questions_teachers():
 @app.route("/snxpage")
 def snxpage():
     return render_template('snxpage.html')
+
+
+
+@app.route("/exercise")
+def exercisepage():
+    return render_template('exercise.html', nb=True)
+
+@app.route("/ex_simple_ans")
+def ex_simple_ans():
+    return render_template('ex_simple_ans.html', nb=True)
 
 
 @app.route('/api', methods=['GET', 'POST'])
