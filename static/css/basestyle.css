@@ -29,7 +29,7 @@ header {
 .navbar #marker {
     position: absolute;
     left: 0;
-    height: 3px;
+    height: 2.8px;
     width: 0;
     background: #000;
     bottom: -3px;

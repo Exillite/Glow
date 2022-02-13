@@ -418,3 +418,9 @@ body {
 .btn-send-ans:active {
     background-color: #4db16f;
 }
+
+.long-input {
+    min-height: 45px;
+    height: 200px;
+    resize: vertical;
+}
