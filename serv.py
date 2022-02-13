@@ -257,7 +257,7 @@ def snxpage():
 
 @app.route("/exercise")
 def exercisepage():
-    return render_template('exercies_radio_btn.html', nb=True)
+    return render_template('exercies_checkbox.html', nb=True)
 
 @app.route("/ex_simple_ans")
 def ex_simple_ans():
