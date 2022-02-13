@@ -335,7 +335,7 @@ body {
     margin-top: 80px;
     margin: 0 auto;
     width: 870px;
-    height: 100vh;
+    height: 100%;
 }
 
 .steps-view {
@@ -423,4 +423,29 @@ body {
     min-height: 45px;
     height: 200px;
     resize: vertical;
+}
+
+.radio-ans {
+    vertical-align: middle;
+    margin-bottom: 10px;
+    width: 100%;
+    min-height: 45px;
+    background: #B6DBF5;
+    border: 2px solid #000000;
+    box-sizing: border-box;
+    border-radius: 5px;
+    font-size: 28px;
+    text-indent: 10px;
+}
+
+.ans-list {
+    margin-top: 40px;
+    font-size: 28px;
+}
+
+.ans-list .radio-btn {
+    margin-top: 8px;
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
 }
