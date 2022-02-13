@@ -454,3 +454,14 @@ body {
     position: relative;
     margin-top: 20px;
 }
+
+.imgs-list {
+    margin-top: 20px;
+}
+
+.theory-img {
+    width: 800px;
+    height: 400px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
