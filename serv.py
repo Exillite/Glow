@@ -262,7 +262,7 @@ def exercisepage():
 
 @app.route("/theory")
 def theory():
-    return render_template('theory_text.html', nb=True)
+    return render_template('theory_video.html', nb=True)
 
 
 @app.route('/api', methods=['GET', 'POST'])

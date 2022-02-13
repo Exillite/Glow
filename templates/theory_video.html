@@ -1,0 +1,33 @@
+{% extends 'base.html' %} {% block content %} {{ super() }}
+<div class="steps-view st" id="st">
+    <button class="step active"></button>
+    <button class="step notactive"></button>
+    <button class="step notactive"></button>
+    <button class="step notactive"></button>
+    <button class="step notactive"></button>
+    <button class="step notactive"></button>
+    <button class="step notactive"></button>
+</div>
+
+<div class="context-ex">
+
+
+    <h1 class="step-title">Название темы</h1>
+
+    <div class="ex-text">Бит - это наименьшая единица информации. это количество информации, необходимое для однозначного определения одного из двух равновероятных событий (Да/Нет). В информатике принято рассматривать последовательности длиной 8 бит. Такая последовательность
+        называется байтом. С помощью одного байта можно записать двоичные коды 256 (28) чисел от 0 до 255. Мы с вами привыкли к большим объёмам. Ниже приведена таблица, которая показывает их соотношение.Бит - это наименьшая единица информации. это количество
+        информации, необходимое для однозначного определения одного из двух равновероятных событий (Да/Нет).</div>
+
+    <iframe class="yt-video st" width="80%" height="400px" src="https://www.youtube.com/embed/fEiuolL_S7s?color=white&rel=0&showinfo=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+    </iframe>
+</div>
+
+
+<script>
+    var stpv = document.getElementsByClassName('st');
+    for (const el of stpv) {
+        el.style = "left: calc(50% - " + el.offsetWidth + "px / 2);";
+    }
+</script>
+
+{%endblock %}

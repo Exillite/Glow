@@ -449,3 +449,8 @@ body {
     width: 24px;
     cursor: pointer;
 }
+
+.yt-video {
+    position: relative;
+    margin-top: 20px;
+}
