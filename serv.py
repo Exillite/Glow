@@ -259,9 +259,10 @@ def snxpage():
 def exercisepage():
     return render_template('exercies_checkbox.html', nb=True)
 
-@app.route("/ex_simple_ans")
-def ex_simple_ans():
-    return render_template('ex_simple_ans.html', nb=True)
+
+@app.route("/theory")
+def theory():
+    return render_template('theory_text.html', nb=True)
 
 
 @app.route('/api', methods=['GET', 'POST'])
