@@ -3,15 +3,13 @@
 
 
 <div class="container" id="listWithHandle">
-    {% for i in range(11) %}
-    <div class="card list-group-item glyphicon glyphicon-move" id="card_{{ i }}" onclick="gotoCourse({{ i }})">
-        <div class="imgContainer">
-            <img src="{{ url_for('static', filename='img/tets.jpg')}}" alt="">
-        </div>
+    {% for c in courses %}
+    <div class="card list-group-item glyphicon glyphicon-move" id="card_{{ i }}" onclick="gotoCourse({{ c['id'] }})">
+
         <div class="infoBox">
             <div class="rating"></div>
-            <h2 class="title">Курс {{ i }}</h2>
-            <h5 class="author-name">Родионов Александр</h5>
+            <h2 class="title">{{ c['name'] }}</h2>
+            <h5 class="author-name">{{ c['auther_name'] }}</h5>
         </div>
     </div>
     {% endfor %}

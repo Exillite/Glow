@@ -1,0 +1,25 @@
+{% extends 'base.html' %} {% block content %} {{ super() }}
+
+<div class="context-ex">
+
+
+    <h1 class="step-title">Создание курса</h1>
+    <form action="teach" method="post">
+
+        <input required class="ex-input st" id="st" type="text" name="name" placeholder="Введите название курса...">
+        <textarea required class="ex-input long-input st" id="st" name="description" placeholder="Введите описание курса..."></textarea>
+        <p></p>
+        <button type="submit" class="btn-send-ans">Создать</button>
+    </form>
+
+</div>
+
+
+<script>
+    var stpv = document.getElementsByClassName('st');
+    for (const el of stpv) {
+        el.style = "left: calc(50% - " + el.offsetWidth + "px / 2);";
+    }
+</script>
+
+{%endblock %}

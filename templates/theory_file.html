@@ -1,0 +1,38 @@
+{% extends 'base.html' %} {% block content %} {{ super() }}
+
+<div class="steps-view st" id="st">
+    <button class="step active"></button>
+    <button class="step notactive"></button>
+    <button class="step notactive"></button>
+    <button class="step notactive"></button>
+    <button class="step notactive"></button>
+    <button class="step notactive"></button>
+    <button class="step notactive"></button>
+</div>
+
+<div class="context-ex">
+
+
+    <h1 class="step-title">Название темы</h1>
+
+    <div onclick="" class="ex-text">Бит - это наименьшая единица информации. это количество информации, необходимое для однозначного определения одного из двух равновероятных событий (Да/Нет). В информатике принято рассматривать последовательности длиной 8 бит. Такая последовательность
+        называется байтом. С помощью одного байта можно записать двоичные коды событий (Да/Нет). Это ёщ какко йто текст пост о для видп ао одв атв адвтавфа лвадл авф авыфа ва ва лвадлвдаф
+    </div>
+
+
+    <div class="dwn-file" onclick="document.location='{{ url_for('download', filename='9.zip') }}'">
+        <div class="file-name">Название файла</div><img class="dwn-ic" src="https://img.icons8.com/pastel-glyph/64/000000/download--v1.png" /></div>
+
+
+
+</div>
+
+
+<script>
+    var stpv = document.getElementsByClassName('st');
+    for (const el of stpv) {
+        el.style = "left: calc(50% - " + el.offsetWidth + "px / 2);";
+    }
+</script>
+
+{%endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %} {% block content %} {{ super() }}
+<div class="steps-view st" id="st">
+    <button class="step active"></button>
+    <button class="step notactive"></button>
+    <button class="step notactive"></button>
+    <button class="step notactive"></button>
+    <button class="step notactive"></button>
+    <button class="step notactive"></button>
+    <button class="step notactive"></button>
+</div>
+
+<div class="context-ex">
+
+
+    <h1 class="step-title">Название темы</h1>
+
+    <div class="ex-text">Сколькими способами можно переставить числа от 1 до 100 так, чтобы соседние числа отличались не более, чем на 1?</div>
+
+    <textarea class="ex-input long-input st" id="st" placeholder="Введите свой ответ..."></textarea>
+    <p></p>
+    <button class="btn-send-ans">Отправить</button>
+
+</div>
+
+
+<script>
+    var stpv = document.getElementsByClassName('st');
+    for (const el of stpv) {
+        el.style = "left: calc(50% - " + el.offsetWidth + "px / 2);";
+    }
+</script>
+
+{%endblock %}

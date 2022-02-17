@@ -1,0 +1,42 @@
+{% extends 'base.html' %} {% block content %} {{ super() }}
+
+
+
+<div class="container" id="listWithHandle">
+    <div class="card list-group-item glyphicon glyphicon-move" id="card_{{ i }}" onclick="gotoCourse({{ i }})">
+
+        <div class="infoBox">
+            <div class="rating"></div>
+            <h2 class="title">Курс {{ i }}</h2>
+            <h5 class="author-name">Родионов Александр</h5>
+        </div>
+
+    </div>
+
+    {% for i in range(4) %}
+    <div class="card list-group-item glyphicon glyphicon-move" id="card_{{ i }}" onclick="gotoCourse({{ i }})">
+
+        <div class="infoBox">
+            <div class="rating"></div>
+            <h2 class="title">Курс {{ i }}</h2>
+            <h5 class="author-name">Родионов Александр</h5>
+        </div>
+
+    </div>
+    {% endfor %}
+
+    <div class="card new-card" id="card_{{ i }}" onclick="document.location.href = '/newcourse'">
+        <div class="infoBox">
+            <div class="rating"></div>
+            <h1 class="title">Создать курс</h1>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script>
+
+<script src="{{ url_for('static', filename='js/courses.js')}}"></script>
+
+
+{% endblock %}

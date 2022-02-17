@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
-    {% if title %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> {% if title %}
     <title>{{title}}</title>
     {% else %}
     <title>Glow</title>
@@ -17,11 +17,9 @@
 <header>
     <nav class="navbar" id="navbar">
         <div id="marker"></div>
-        <a href="/courses">Курсы</a>
-        <a href="#">Настройки</a>
-        <a href="#">Преподователям</a>
-        <a href="#">Аккаунт</a>
-        <a href="#">О приложении</a>
+        <a href="/courses">🎓Курсы</a>
+        <a href="/teach">👨‍🏫Преподавание</a>
+        <a href="#">👤Аккаунт</a>
     </nav>
     <style>
         .header-hr {
@@ -47,7 +45,7 @@
     <hr class="header-hr">
     <br>
     <script type="text/javascript">
-        var myip = 'http://127.0.0.1:5000';
+        var myip = 'http://192.168.1.69:5000';
     </script>
 
     {% if is_logined %}

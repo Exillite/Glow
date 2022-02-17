@@ -168,7 +168,6 @@ body {
     width: 100%;
     display: flex;
     justify-content: flex-start;
-    align-items: baseline;
     flex-wrap: wrap;
     background-color: #f0f8ff;
 }
@@ -180,6 +179,14 @@ body {
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 15px;
+}
+
+.new-card {
+    border: 2px solid black;
+}
+
+.new-card .imgContainer {
+    border: 1px dashed rgba(70, 70, 70, 0);
 }
 
 .card:hover {
@@ -204,6 +211,12 @@ body {
     color: #111;
     margin-bottom: 5px;
     margin-left: 5px;
+    display: inline-block;
+}
+
+.edit-course {
+    height: 25px;
+    border-radius: 6px;
 }
 
 .ghost {
@@ -247,7 +260,7 @@ body {
     position: absolute;
     width: 588px;
     height: 72px;
-    left: 349px;
+    left: 120px;
     top: 60px;
     font-family: Chenla;
     font-style: normal;
@@ -261,7 +274,7 @@ body {
     position: absolute;
     width: 503px;
     height: 121px;
-    left: 352px;
+    left: 122px;
     top: 132px;
     font-family: Chenla;
     font-style: normal;
@@ -464,4 +477,33 @@ body {
     height: 400px;
     object-fit: contain;
     margin-bottom: 10px;
+}
+
+.dwn-file {
+    margin-top: 20px;
+    width: 100%;
+    min-height: 60px;
+    background: #DAE7FA;
+    border: 0.8px solid #000000;
+    box-sizing: border-box;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.file-name {
+    margin-left: 15px;
+    text-align: left;
+    font-size: 28px;
+    display: inline-block;
+    margin-top: 10px;
+    width: 780px;
+}
+
+.dwn-ic {
+    vertical-align: middle;
+    float: inline-end;
+}
+
+.file-size {
+    text-align: right;
 }

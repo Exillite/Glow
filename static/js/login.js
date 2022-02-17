@@ -141,7 +141,7 @@ function getReg(ret) {
             notify("error", "Ошибка!");
             break;
         case "OK":
-            window.location.href = myip + '/alreg';
+            window.location.href = myip + '/';
             break;
         default:
             console.log('server return after reg:' + ret);
@@ -164,6 +164,7 @@ function getLogin(ret) {
             notify("error", "Ошибка!");
             break;
         case "id":
+            document.cookie = "user_token=" + ret.split("=")[1];
             window.location.href = myip + '/';
             break;
         default:

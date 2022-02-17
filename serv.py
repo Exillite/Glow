@@ -1,10 +1,13 @@
+from calendar import c
 from re import T
+import os
 from flask import *
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import DATA
 import sqlite3
 import question
+import random
 
 import json
 
@@ -21,7 +24,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///glow.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-
+app.config['UPLOAD_FOLDER'] = 'C:\\Users\\Alexander\\Desktop\\low\\static\\img'
 
 quests2st = []
 quests2st.append(question.Qeston2Students('1', 'Нравится ли вам, как организован формат дистанционного обучения в вашей школе?', ['Да', 'Скорее да, чем нет', 'Скорее нет, чем да', 'Нет']))
@@ -215,7 +218,17 @@ def adminka():
 
 @app.route("/courses")
 def courses():
-    return render_template('courses.html', nb=True)
+    token = request.cookies.get('user_token')
+    student_id = Users.query.filter_by(token=token).first().id
+    courses_ids = User2Course.query.filter_by(user_id=student_id).all()
+    crs = []
+    for i in courses_ids:
+        c = Courses.query.filter_by(id=i.id).first()
+        ath = Users.query.filter_by(id=c.author_id).first()
+        dic = {'id': c.id, 'name': c.name, 'description': c.description, 'author_id': c.author_id, 'auther_name': f'{ath.name} {ath.surname}'}
+        crs.append(dic)
+
+    return render_template('courses.html', courses=crs, nb=True)
 
 @app.route("/course/<id>")
 def course(id):
@@ -251,18 +264,45 @@ def questions_teachers():
 
 @app.route("/snxpage")
 def snxpage():
+    print(request.cookies.get('user_token'))
     return render_template('snxpage.html')
 
 
 
+@app.route("/teach", methods=['POST', 'GET'])
+def teath():
+    if request.method == 'POST':
+        name = request.form.get('name')  # запрос к данным формы
+        description = request.form.get('description')
+        token = request.cookies.get('user_token')
+        a_id = Users.query.filter_by(token=token).first().id
+        db.session.add(Courses(name=name, description=description, author_id=a_id, is_public=False))
+        db.session.flush()
+        db.session.commit()
+        
+
+
+    return render_template('teachers_courses.html', nb=True)
+
 @app.route("/exercise")
 def exercisepage():
-    return render_template('exercies_checkbox.html', nb=True)
-
+    return render_template('exercise.html', nb=True)
 
 @app.route("/theory")
 def theory():
-    return render_template('theory_img.html', nb=True)
+    return render_template('theory_video.html', nb=True)
+
+@app.route("/newcourse")
+def new_course():
+    return render_template('newcourse.html', nb=True)
+
+
+@app.route('/uploads/<path:filename>', methods=['GET', 'POST'])
+def download(filename):
+    # Appending app path to upload folder path within app root folder
+    uploads = os.path.join(current_app.root_path, app.config['UPLOAD_FOLDER'])
+    # Returning file from appended path
+    return send_from_directory(directory=r"C:\Users\Alexander\Desktop\glow\static\img", path=filename)
 
 
 @app.route('/api', methods=['GET', 'POST'])
@@ -275,7 +315,7 @@ def api():
                 return 'ALR'
             pshash = generate_password_hash(j['password'])
             token = generate_password_hash(j['email'])
-            u = Users(is_active=False, name=j['name'], surname=j['surname'], email=j['email'], password=pshash,
+            u = Users(is_active=True, name=j['name'], surname=j['surname'], email=j['email'], password=pshash,
                       token=token)
             db.session.add(u)
             db.session.flush()
@@ -420,7 +460,11 @@ def api():
         r = {}
         try:
             a_id = Users.query.filter_by(token=j['token']).first().id
-            с = Courses(name=j['name'], description=j['description'], author_id=a_id, is_public=j['is_public'])
+            с = Courses(name=j['name'], description=j['description'], author_id=a_id, is_public=False)
+
+            db.session.add(c)
+            db.session.flush()
+            db.session.commit()
 
             r['status'] = 'OK'
 
