@@ -3,29 +3,18 @@
 
 
 <div class="container" id="listWithHandle">
-    <div class="card list-group-item glyphicon glyphicon-move" id="card_{{ i }}" onclick="gotoCourse({{ i }})">
+    {% for c in curses %}
+    <div class="card list-group-item glyphicon glyphicon-move" id="card_{{ c['id'] }}" onclick="gotoEditCourse({{ c['id'] }})">
 
         <div class="infoBox">
             <div class="rating"></div>
-            <h2 class="title">Курс {{ i }}</h2>
-            <h5 class="author-name">Родионов Александр</h5>
+            <h2 class="title">{{ c['name'] }}</h2>
+            <h5 class="author-name">{{ c['auther_name'] }}</h5>
         </div>
-
-    </div>
-
-    {% for i in range(4) %}
-    <div class="card list-group-item glyphicon glyphicon-move" id="card_{{ i }}" onclick="gotoCourse({{ i }})">
-
-        <div class="infoBox">
-            <div class="rating"></div>
-            <h2 class="title">Курс {{ i }}</h2>
-            <h5 class="author-name">Родионов Александр</h5>
-        </div>
-
     </div>
     {% endfor %}
 
-    <div class="card new-card" id="card_{{ i }}" onclick="document.location.href = '/newcourse'">
+    <div class="card new-card" onclick="document.location.href = '/newcourse'">
         <div class="infoBox">
             <div class="rating"></div>
             <h1 class="title">Создать курс</h1>

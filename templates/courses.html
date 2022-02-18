@@ -13,11 +13,17 @@
         </div>
     </div>
     {% endfor %}
+
+    <a class="card add-course-card" href="{{url_for('add_course')}}">
+        <div class="infoBox">
+            <h1 class="title add-course-title">+</h1>
+        </div>
+    </a>
 </div>
 
-<script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script>
+<script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js "></script>
 
-<script src="{{ url_for('static', filename='js/courses.js')}}"></script>
+<script src="{{ url_for( 'static', filename='js/courses.js' )}} "></script>
 
 
 {% endblock %}

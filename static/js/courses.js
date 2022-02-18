@@ -9,3 +9,9 @@ function gotoCourse(id) {
     console.log(id);
     document.location.href = "/course/" + id;
 }
+
+
+function gotoEditCourse(id) {
+    console.log(id);
+    document.location.href = "/edit_course/" + id;
+}

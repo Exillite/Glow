@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
@@ -19,7 +19,7 @@
         <div id="marker"></div>
         <a href="/courses">🎓Курсы</a>
         <a href="/teach">👨‍🏫Преподавание</a>
-        <a href="#">👤Аккаунт</a>
+        <a href="/login">👤Аккаунт</a>
     </nav>
     <style>
         .header-hr {
@@ -45,7 +45,7 @@
     <hr class="header-hr">
     <br>
     <script type="text/javascript">
-        var myip = 'http://192.168.1.69:5000';
+        var myip = 'http://192.168.1.89:5000';
     </script>
 
     {% if is_logined %}
@@ -57,7 +57,7 @@
             return matches ? decodeURIComponent(matches[1]) : undefined;
         }
 
-        if (gC("is_login") == undefined) {
+        if (gC("user_token") == undefined) {
             console.log("in if");
             window.location.href = myip + '/login';
         }

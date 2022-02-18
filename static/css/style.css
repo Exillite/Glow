@@ -507,3 +507,39 @@ body {
 .file-size {
     text-align: right;
 }
+
+.course-code {
+    background-color: #cde1f1;
+    font-size: 18px;
+    width: 65px;
+}
+
+.input-block-name {
+    height: 40px;
+    width: 490px;
+    font-size: 21px;
+}
+
+.block-create-btn {
+    height: 40px;
+    width: 40px;
+    font-size: 36px;
+}
+
+.block-create-btn:active {
+    background-color: grey;
+}
+
+.conect-course-btn {
+    width: 180px;
+}
+
+.add-course-title {
+    font-size: 44px;
+}
+
+.add-course-card {
+    border: 2px #000000 solid;
+    width: 60px;
+    z-index: 3;
+}

@@ -1,4 +1,5 @@
 from calendar import c
+from lib2to3.pgen2 import token
 from re import T
 import os
 from flask import *
@@ -85,7 +86,6 @@ class Courses(db.Model):
 class Moduls(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer)
-    number = db.Column(db.Integer)
     name = db.Column(db.String(50))
 
     def __repr__(self):
@@ -95,7 +95,6 @@ class Moduls(db.Model):
 class Blocks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     module_id = db.Column(db.Integer)
-    number = db.Column(db.Integer)
     type = db.Column(db.String(50))
     text = db.Column(db.Text)
     condition = db.Column(db.Text)
@@ -173,6 +172,8 @@ background-color: #C4DFE6;
     server.quit()
 
 
+
+
 @app.errorhandler(404)
 def error_page(error):
     return render_template('404.html', nb=True)
@@ -218,21 +219,28 @@ def adminka():
 
 @app.route("/courses")
 def courses():
+    if request.cookies.get('user_token') is None:
+        return redirect(url_for('login'))
+
     token = request.cookies.get('user_token')
     student_id = Users.query.filter_by(token=token).first().id
+    
     courses_ids = User2Course.query.filter_by(user_id=student_id).all()
     crs = []
     for i in courses_ids:
-        c = Courses.query.filter_by(id=i.id).first()
+        c = Courses.query.filter_by(id=i.course_id).first()
+        
         ath = Users.query.filter_by(id=c.author_id).first()
         dic = {'id': c.id, 'name': c.name, 'description': c.description, 'author_id': c.author_id, 'auther_name': f'{ath.name} {ath.surname}'}
         crs.append(dic)
 
-    return render_template('courses.html', courses=crs, nb=True)
+    return render_template('courses.html', courses=crs, nb=True, is_logined=True)
 
 @app.route("/course/<id>")
 def course(id):
-    return render_template('course.html', nb=True)
+    if request.cookies.get('user_token') is None:
+        return redirect(url_for('login'))
+    return render_template('course.html', nb=True, is_logined=True)
 
 @app.route("/questions", methods=["POST", "GET"])
 def questions():
@@ -270,31 +278,101 @@ def snxpage():
 
 
 @app.route("/teach", methods=['POST', 'GET'])
-def teath():
+def teahc():
+    if request.cookies.get('user_token') is None:
+        return redirect(url_for('login'))
+
+    token = request.cookies.get('user_token')
     if request.method == 'POST':
         name = request.form.get('name')  # запрос к данным формы
         description = request.form.get('description')
-        token = request.cookies.get('user_token')
+        
         a_id = Users.query.filter_by(token=token).first().id
         db.session.add(Courses(name=name, description=description, author_id=a_id, is_public=False))
         db.session.flush()
         db.session.commit()
-        
+    
+    student_id = Users.query.filter_by(token=token).first().id
+    courses = Courses.query.filter_by(author_id=student_id).all()
+    crs = []
+    for c in courses:
+        ath = Users.query.filter_by(id=c.author_id).first()
+        dic = {'id': c.id, 'name': c.name, 'description': c.description, 'author_id': c.author_id, 'auther_name': f'{ath.name} {ath.surname}'}
+        crs.append(dic)
+
+    return render_template('teachers_courses.html', curses=crs, nb=True, is_logined=True)
+
+@app.route("/edit_course/<course_id>", methods=['GET', 'POST'])
+def edit_course(course_id):
+    if request.cookies.get('user_token') is None:
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        name = request.form.get('name')  # запрос к данным формы
+        token = request.cookies.get('user_token')
 
 
-    return render_template('teachers_courses.html', nb=True)
+        db.session.add(Moduls(course_id=course_id))
+        db.session.flush()
+        db.session.commit()
+    
+
+    course_code = 842859 - int(course_id)
+
+
+    return render_template('course_edit.html', course_code=course_code, nb=True, is_logined=True)
+
 
 @app.route("/exercise")
 def exercisepage():
-    return render_template('exercise.html', nb=True)
+    if request.cookies.get('user_token') is None:
+        return redirect(url_for('login'))
+    return render_template('exercise.html', nb=True, is_logined=True)
 
 @app.route("/theory")
 def theory():
-    return render_template('theory_video.html', nb=True)
+    if request.cookies.get('user_token') is None:
+        return redirect(url_for('login'))
+    return render_template('theory_video.html', nb=True, is_logined=True)
 
-@app.route("/newcourse")
+@app.route("/newcourse", methods=["POST", "GET"])
 def new_course():
-    return render_template('newcourse.html', nb=True)
+    if request.cookies.get('user_token') is None:
+        return redirect(url_for('login'))
+
+    token = request.cookies.get('user_token')
+    if request.method == 'POST':
+        name = request.form.get('name')  # запрос к данным формы
+        description = request.form.get('description')
+        
+        a_id = Users.query.filter_by(token=token).first().id
+        db.session.add(Courses(name=name, description=description, author_id=a_id, is_public=False))
+        db.session.flush()
+        db.session.commit()
+        return redirect(url_for('teahc'))
+
+    return render_template('newcourse.html', nb=True, is_logined=True)
+
+@app.route("/addcourse", methods=["POST", "GET"])
+def add_course():
+    if request.cookies.get('user_token') is None:
+        return redirect(url_for('login'))
+
+    token = request.cookies.get('user_token')
+    student_id = Users.query.filter_by(token=token).first().id
+
+    if request.method == 'POST':
+        code = request.form.get('code')
+
+        
+        courses = Courses.query.filter_by(id=842859-int(code)).all()
+
+        if len(courses) == 1:
+            db.session.add(User2Course(user_id=student_id, course_id=842859-int(code)))
+            db.session.flush()
+            db.session.commit()
+        return redirect(url_for('courses'))
+
+    return render_template('addcourse.html', nb=True, is_logined=True)
 
 
 @app.route('/uploads/<path:filename>', methods=['GET', 'POST'])

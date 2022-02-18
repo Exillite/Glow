@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% block content %} {{ super() }}
+
+<div class="context-ex">
+
+
+    <h1 class="step-title">Присоединиться к крусу</h1>
+    <form method="post">
+
+        <input required class="ex-input st" id="st" type="number" name="code" placeholder="Введите код курса...">
+        <p></p>
+        <button type="submit" class="btn-send-ans conect-course-btn">Присоединиться</button>
+    </form>
+
+</div>
+
+
+<script>
+    var stpv = document.getElementsByClassName('st');
+    for (const el of stpv) {
+        el.style = "left: calc(50% - " + el.offsetWidth + "px / 2);";
+    }
+</script>
+
+{%endblock %}

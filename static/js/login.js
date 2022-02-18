@@ -164,7 +164,7 @@ function getLogin(ret) {
             notify("error", "Ошибка!");
             break;
         case "id":
-            document.cookie = "user_token=" + ret.split("=")[1];
+            document.cookie = "user_token=" + ret.split("=")[1] + ";max-age=31556926";
             window.location.href = myip + '/';
             break;
         default:
