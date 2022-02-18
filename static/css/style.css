@@ -356,6 +356,14 @@ body {
     border-radius: 3px;
 }
 
+.step {
+    font-size: 31px;
+}
+
+.new-step {
+    background: #cfd5d4;
+}
+
 .active {
     background: #37E63E;
     border: 2px solid #000000;

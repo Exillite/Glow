@@ -13,9 +13,9 @@
 
 
             {% for m in moduls %}
-            <div class="block-item">
+            <a class="block-item" onclick="goblock({{ m['id'] }})">
                 <div class="block-item-name">{{m['name']}}</div>
-            </div>
+            </a>
             {% endfor %}
 
 
@@ -30,17 +30,15 @@
 <script src="{{ url_for('static', filename='js/blocks.js')}}"></script>
 <script>
     function copy() {
-        /* Get the text field */
         var copyText = document.getElementById("myInput");
-
-        /* Select the text field */
         copyText.select();
-
-        /* Copy the text inside the text field */
         document.execCommand("copy");
-
-        /* Alert the copied text */
         alert("Код курса скоприрован в буфер обмена: " + copyText.value);
+    }
+
+    function goblock(id) {
+        console.log(document.location.href);
+        document.location.href = document.location.pathname + "/" + id + "/0"
     }
 </script>
 

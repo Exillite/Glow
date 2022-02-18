@@ -341,6 +341,15 @@ def edit_course(course_id):
 
     return render_template('course_edit.html', course_name=course_name, course_description=course_description, moduls=mdls, course_code=course_code, nb=True, is_logined=True)
 
+@app.route("/edit_course/<course_id>/<block_id>/<step_id>", methods=['GET', 'POST'])
+def edit_block(course_id, block_id, step_id=0):
+    if request.cookies.get('user_token') is None:
+        return redirect(url_for('login'))
+    
+    print(course_id, block_id, step_id)
+
+    return render_template('edit_block.html', steps=[{'id': 2, 'is_ready': True}, {'id': 4, 'is_ready': False},{'id': 8, 'is_ready': True}])
+
 
 @app.route("/exercise")
 def exercisepage():

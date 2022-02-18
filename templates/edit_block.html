@@ -1,0 +1,37 @@
+{% extends 'base.html' %} {% block content %} {{ super() }}
+<div class="steps-view st" id="st">
+
+    {% for s in steps %} {% if s['is_ready'] %}
+    <button onclick="gostep({{s['id']}})" class="step active"></button> {% else %}
+    <button onclick="gostep({{s['id']}})" class="step notactive"></button> {% endif %} {% endfor %}
+
+    <button class="step notactive">+</button>
+</div>
+
+<div class="context-ex">
+
+
+    <h1 class="step-title">Название темы</h1>
+
+    <div class="ex-text">Сколькими способами можно переставить числа от 1 до 100 так, чтобы соседние числа отличались не более, чем на 1?</div>
+
+    <input class="ex-input st" id="st" type="text" placeholder="Введите свой ответ...">
+    <p></p>
+    <button class="btn-send-ans">Отправить</button>
+
+</div>
+
+
+<script>
+    var stpv = document.getElementsByClassName('st');
+    for (const el of stpv) {
+        el.style = "left: calc(50% - " + el.offsetWidth + "px / 2);";
+    }
+
+    function gostep(id) {
+        var st = document.location.href;
+        document.location.href = st.slice(0, st.lastIndexOf('/')) + "/" + id;
+    }
+</script>
+
+{%endblock %}
