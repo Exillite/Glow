@@ -240,7 +240,18 @@ def courses():
 def course(id):
     if request.cookies.get('user_token') is None:
         return redirect(url_for('login'))
-    return render_template('course.html', nb=True, is_logined=True)
+
+    moduls = Moduls.query.filter_by(course_id=id).all()
+    mdls = []
+    for m in moduls:
+        dic = {'id': m.id, 'name': m.name, 'course_id': m.course_id}
+        mdls.append(dic)
+
+    this_course = Courses.query.filter_by(id=id).first()
+    course_name = this_course.name
+    course_description = this_course.description
+    
+    return render_template('course.html', course_name=course_name, course_description=course_description, moduls=mdls, nb=True, is_logined=True)
 
 @app.route("/questions", methods=["POST", "GET"])
 def questions():
@@ -306,20 +317,29 @@ def teahc():
 def edit_course(course_id):
     if request.cookies.get('user_token') is None:
         return redirect(url_for('login'))
+
     if request.method == 'POST':
         name = request.form.get('name')  # запрос к данным формы
         token = request.cookies.get('user_token')
-
-
-        db.session.add(Moduls(course_id=course_id))
+        
+        db.session.add(Moduls(course_id=course_id, name=name))
         db.session.flush()
         db.session.commit()
-    
+        return redirect(f'/edit_course/{course_id}')
+
+    moduls = Moduls.query.filter_by(course_id=course_id).all()
+    mdls = []
+    for m in moduls:
+        dic = {'id': m.id, 'name': m.name, 'course_id': m.course_id}
+        mdls.append(dic)
 
     course_code = 842859 - int(course_id)
 
+    this_course = Courses.query.filter_by(id=course_id).first()
+    course_name = this_course.name
+    course_description = this_course.description
 
-    return render_template('course_edit.html', course_code=course_code, nb=True, is_logined=True)
+    return render_template('course_edit.html', course_name=course_name, course_description=course_description, moduls=mdls, course_code=course_code, nb=True, is_logined=True)
 
 
 @app.route("/exercise")
@@ -365,8 +385,9 @@ def add_course():
 
         
         courses = Courses.query.filter_by(id=842859-int(code)).all()
+        courses_test = User2Course.query.filter_by(course_id=842859-int(code), user_id=student_id).all()
 
-        if len(courses) == 1:
+        if len(courses) == 1 and len(courses_test) == 0:
             db.session.add(User2Course(user_id=student_id, course_id=842859-int(code)))
             db.session.flush()
             db.session.commit()

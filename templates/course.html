@@ -2,13 +2,19 @@
 <div class="blok-blocks">
     <div class="context">
         <div class="course-info">
-            <div class="course-name">Название некого курса</div>
-            <div class="course-descrption">Описание самого обычного курса не понятно тольео зачем оно сдесь ведь и без него всё понятно</div>
+            <div class="course-name">{{course_name}}</div>
+            <div class="course-descrption">{{course_description}}</div>
         </div>
+
+
         <div class="blocks-list">
+
+
+            {% for m in moduls %}
             <div class="block-item">
-                <div class="block-item-name">Название блока</div>
+                <div class="block-item-name">{{m['name']}}</div>
             </div>
+            {% endfor %}
 
         </div>
     </div>

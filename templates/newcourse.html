@@ -4,12 +4,12 @@
 
 
     <h1 class="step-title">Создание курса</h1>
-    <form method="post">
+    <form method="post" onsubmit="check()">
 
-        <input required class="ex-input st" id="st" type="text" name="name" placeholder="Введите название курса...">
-        <textarea required class="ex-input long-input st" id="st" name="description" placeholder="Введите описание курса..."></textarea>
+        <input id="name_new_course" required class="ex-input st" id="st" type="text" name="name" placeholder="Введите название курса...">
+        <textarea id="desckr_new_course" onchange="check(this.value)" required class="ex-input long-input st" id="st" name="description" placeholder="Введите описание курса..."></textarea>
         <p></p>
-        <button type="submit" class="btn-send-ans">Создать</button>
+        <button id="newcoursebtn" type="submit" class="btn-send-ans">Создать</button>
     </form>
 
 </div>
@@ -19,6 +19,21 @@
     var stpv = document.getElementsByClassName('st');
     for (const el of stpv) {
         el.style = "left: calc(50% - " + el.offsetWidth + "px / 2);";
+    }
+
+    var new_course_btn = document.getElementById('newcoursebtn');
+    var name_new_course = document.getElementById('name_new_course');
+    var desckr_new_course = document.getElementById('desckr_new_course');
+
+
+    function check() {
+        var str1 = name_new_course.value;
+        var str2 = desckr_new_course.value;
+
+        if ((str1.trim() == '') && (str2.trim() == '')) {
+            notify('error', 'Введите коректое название и описание!');
+            event.preventDefault();
+        }
     }
 </script>
 

@@ -262,7 +262,6 @@ body {
     height: 72px;
     left: 120px;
     top: 60px;
-    font-family: Chenla;
     font-style: normal;
     font-weight: normal;
     font-size: 40px;
@@ -272,16 +271,13 @@ body {
 
 .course-descrption {
     position: absolute;
-    width: 503px;
     height: 121px;
     left: 122px;
     top: 132px;
-    font-family: Chenla;
     font-style: normal;
     font-weight: normal;
-    font-size: 16px;
+    font-size: 21px;
     line-height: 29px;
-    display: flex;
     align-items: center;
     color: #000000;
 }
@@ -426,10 +422,12 @@ body {
     box-sizing: border-box;
     border-radius: 5px;
     margin-right: 20px;
+    z-index: 10;
 }
 
 .btn-send-ans:active {
     background-color: #4db16f;
+    z-index: 10;
 }
 
 .long-input {
