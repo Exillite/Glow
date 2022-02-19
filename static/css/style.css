@@ -549,3 +549,45 @@ body {
     width: 60px;
     z-index: 3;
 }
+
+.new-step-menu {
+    position: absolute;
+    background-color: #00acee;
+    border-radius: 10px;
+    width: 600px;
+    height: 400px;
+}
+
+.new-step-type {
+    position: relative;
+    margin-bottom: 10px;
+    width: 50%;
+    height: 40px;
+    border-radius: 10px;
+    background: #cbe4f7;
+}
+
+.btn-new-step-group {
+    margin-top: 70px;
+}
+
+.new-step-title {
+    margin-left: 60px;
+    font-size: 21px;
+}
+
+.exit-new-step-menu {
+    height: 40px;
+    width: 40px;
+    float: right;
+    margin-top: 10px;
+    margin-right: 10px;
+    font-size: 27px;
+    background: #93adc0;
+    border-radius: 10px;
+}
+
+.edit-text {
+    width: 900px;
+    height: 140px;
+}

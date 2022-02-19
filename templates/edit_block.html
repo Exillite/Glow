@@ -5,21 +5,37 @@
     <button onclick="gostep({{s['id']}})" class="step active"></button> {% else %}
     <button onclick="gostep({{s['id']}})" class="step notactive"></button> {% endif %} {% endfor %}
 
-    <button class="step notactive">+</button>
+    <button onclick="newstep()" class="step notactive">+</button>
 </div>
 
-<div class="context-ex">
-
-
-    <h1 class="step-title">Название темы</h1>
-
-    <div class="ex-text">Сколькими способами можно переставить числа от 1 до 100 так, чтобы соседние числа отличались не более, чем на 1?</div>
-
-    <input class="ex-input st" id="st" type="text" placeholder="Введите свой ответ...">
-    <p></p>
-    <button class="btn-send-ans">Отправить</button>
-
+<div id="new_step_menu" class="st new-step-menu">
+    <button onclick="clousemenu()" class="exit-new-step-menu">✖</button>
+    <div class="btn-new-step-group">
+        <div class="new-step-title">Выберите тип нового задания:</div>
+        <br>
+        <button onclick="createnewstep('theory')" class="st new-step-type">Теория</button>
+        <br>
+        <button onclick="createnewstep('short_ans')" class="st new-step-type">Ввод ответа</button>
+        <br>
+        <button onclick="createnewstep('long_ans')" class="st new-step-type">Ввод текста</button>
+        <br>
+        <button onclick="createnewstep('task_with_answers')" class="st new-step-type">Тест</button>
+        <br>
+        <button onclick="createnewstep('file')" class="st new-step-type">Прикрепить файл</button>
+    </div>
 </div>
+
+
+{% if dt['type'] == 'theory' %}
+<form class="context-ex" method="post">
+    <input placeholder="Введите название..." value="{{dt['title']}}" class="step-title">
+    <br>
+    <textarea placeholder="Введите текст..." class="ex-text edit-text">{{dt['text']}}</textarea>
+
+    <button class="btn-send-ans">Сохранить</button>
+
+</form>
+{% endif %}
 
 
 <script>
@@ -31,6 +47,43 @@
     function gostep(id) {
         var st = document.location.href;
         document.location.href = st.slice(0, st.lastIndexOf('/')) + "/" + id;
+    }
+
+    var new_step_menu = document.getElementById('new_step_menu');
+    new_step_menu.hidden = true;
+
+    function newstep() {
+        new_step_menu.hidden = false;
+    }
+
+    function clousemenu() {
+        new_step_menu.hidden = true;
+    }
+
+    function createnewstep(str) {
+        let xhr = new XMLHttpRequest();
+        // адрес, куда мы отправим нашу JSON-строку
+        let url = myip + "/api";
+        // открываем соединение
+        xhr.open("POST", url, true);
+        // устанавливаем заголовок — выбираем тип контента, который отправится на сервер, в нашем случае мы явно пишем, что это JSON
+        xhr.setRequestHeader("Content-Type", "application/json");
+        // когда придёт ответ на наше обращение к серверу, мы его обработаем здесь
+        xhr.onreadystatechange = function() {
+            // если запрос принят и сервер ответил, что всё в порядке
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // выводим то, что ответил нам сервер — так мы убедимся, что данные он получил правильно
+                location.reload();
+            }
+        };
+        // преобразуем наши данные JSON в строку
+        var data = JSON.stringify({
+            "method": "make_step",
+            'module_id': document.location.pathname.split('/')[3] * 1,
+            'type': str
+        });
+        // когда всё готово, отправляем JSON на сервер
+        xhr.send(data);
     }
 </script>
 

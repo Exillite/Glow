@@ -2,6 +2,7 @@ from calendar import c
 from lib2to3.pgen2 import token
 from re import T
 import os
+from turtle import title
 from flask import *
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -96,11 +97,11 @@ class Blocks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     module_id = db.Column(db.Integer)
     type = db.Column(db.String(50))
+    title = db.Column(db.String(50))
     text = db.Column(db.Text)
-    condition = db.Column(db.Text)
-    answer_type = db.Column(db.String(50))
     one_answer = db.Column(db.Boolean)
-    answers = db.Column(db.String(1000))
+    answers = db.Column(db.Text)
+    path = db.Column(db.String(500))
     example_in = db.Column(db.String(250))
     example_out = db.Column(db.String(250))
 
@@ -342,13 +343,30 @@ def edit_course(course_id):
     return render_template('course_edit.html', course_name=course_name, course_description=course_description, moduls=mdls, course_code=course_code, nb=True, is_logined=True)
 
 @app.route("/edit_course/<course_id>/<block_id>/<step_id>", methods=['GET', 'POST'])
-def edit_block(course_id, block_id, step_id=0):
+def edit_block(course_id, block_id, step_id):
     if request.cookies.get('user_token') is None:
         return redirect(url_for('login'))
     
-    print(course_id, block_id, step_id)
+    blocks = Blocks.query.filter_by(module_id=block_id).all()
+    stps = []
+    for b in blocks:
+        dic = {'id': b.id, 'is_ready': False}
+        stps.append(dic)
 
-    return render_template('edit_block.html', steps=[{'id': 2, 'is_ready': True}, {'id': 4, 'is_ready': False},{'id': 8, 'is_ready': True}])
+
+    blk = Blocks.query.filter_by(id=step_id).first()
+    if blk.type == 'theory':
+        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text}
+    elif blk.type == 'short_ans':
+        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text}
+    elif blk.type == 'long_ans':
+        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text}
+    elif blk.type == 'task_with_answers':
+        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'is_one_ans': blk.one_answer, 'answers': blk.answers.split('#')}
+    elif blk.type == 'file':
+        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'file_name': blk.path}
+        
+    return render_template('edit_block.html', steps=stps, dt=dt)
 
 
 @app.route("/exercise")
@@ -568,9 +586,7 @@ def api():
         r = {}
         try:
             a_id = Users.query.filter_by(token=j['token']).first().id
-            с = Courses(name=j['name'], description=j['description'], author_id=a_id, is_public=False)
-
-            db.session.add(c)
+            db.session.add(Courses(name=j['name'], description=j['description'], author_id=a_id, is_public=False))
             db.session.flush()
             db.session.commit()
 
@@ -582,6 +598,25 @@ def api():
             r['status'] = 'ERROR'
 
         return json.dumps(r)
+
+    elif j['method'] == 'make_step':
+        r = {}
+        try:
+            b = Blocks(module_id=j['module_id'], type=j['type'])
+
+            db.session.add(b)
+            db.session.flush()
+            db.session.commit()
+
+            r['status'] = 'OK'
+
+        except Exception as e:
+            print('!!>>>>' + str(e))
+            db.session.rollback()
+            r['status'] = 'ERROR'
+
+        return json.dumps(r)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
