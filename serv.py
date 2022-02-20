@@ -624,7 +624,22 @@ def api():
             r['status'] = 'ERROR'
 
         return json.dumps(r)
+    
+    elif j['method'] == 'add_new_ans_in_step':
+        r = {}
+        try:
+            st = Blocks.query.filter_by(id=j['step_id']).first()
+            st.answers = st.answers + '#' + j['ans']
+            db.session.commit()
 
+            r['status'] = 'OK'
+
+        except Exception as e:
+            print('!!>>>>' + str(e))
+            db.session.rollback()
+            r['status'] = 'ERROR'
+
+        return json.dumps(r)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)

@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% block content %} {{ super() }}
-<div class="steps-view st" id="st">
+<div class="steps-view st" id="" id="st">
 
     {% for s in steps %} {% if s['is_ready'] %}
     <button onclick="gostep({{s['id']}})" class="step active"></button> {% else %}
@@ -46,18 +46,53 @@
     <input required name="title" placeholder="Введите название..." value="{{dt['title']}}" class="step-title">
     <br>
     <textarea required name="text" placeholder="Введите условие..." class="ex-text edit-text">{{dt['text']}}</textarea>
-    <input required value="{{dt['correct_answer']}}" class="ex-input st" id="st" type="text" placeholder="Введите правильный ответ...">
+    <input required name="correct_answer" value="{{dt['correct_answer']}}" class="ex-input st" id="st" type="text" placeholder="Введите правильный ответ...">
     <p></p>
     <button type="submit" class="btn-send-ans">Сохранить</button>
 
 </form>
-{% endif %} {% if dt['type'] == 'short_ans' %}
+{% endif %} {% if dt['type'] == 'long_ans' %}
 <form class="context-ex" method="post">
     <input required name="title" placeholder="Введите название..." value="{{dt['title']}}" class="step-title">
     <br>
     <textarea required name="text" placeholder="Введите условие..." class="ex-text edit-text">{{dt['text']}}</textarea>
-    <input required value="{{dt['correct_answer']}}" class="ex-input st" id="st" type="text" placeholder="Введите правильный ответ...">
+    <textarea name="correct_answer" class="ex-input long-input st" id="st" placeholder="Введите верный ответ...">{{dt['correct_answer']}}</textarea>
     <p></p>
+    <button type="submit" class="btn-send-ans">Сохранить</button>
+
+</form>
+{% endif %} {% if dt['type'] == 'task_with_answers' %}
+<form class="context-ex" method="post">
+    <input required name="title" placeholder="Введите название..." value="{{dt['title']}}" class="step-title">
+    <br>
+    <textarea required name="text" placeholder="Введите условие..." class="ex-text edit-text">{{dt['text']}}</textarea>
+
+    <p style="font-size: 21px;">Отметьте правильные ответы.</p>
+    <input type="checkbox" style="font-size: 32px;"> Только один верный отет. <br>
+    <div class="ans-list" id="ans_edit_list">
+        <p class="radio-ans"><label>Добавте ответ: <input style="height: 30px; width: 65%; font-size: 21px;" id="new_ans_edit" type="text"><button type="button" onclick="addanstolist()" style="height: 30px; width: 30px; font-size: 22px;">+</button></label></p>
+
+
+        {% for a in dt['answers'] %} {% if a != '' %}
+        <p class="radio-ans"><label><input class="radio-btn" name="{{a}}" type="checkbox" value="nedzen"> {{a}}</label></p>
+        {% endif %} {% endfor %}
+
+    </div>
+    <p></p>
+    <button type="submit" class="btn-send-ans">Сохранить</button>
+
+</form>
+{% endif %} {% if dt['type'] == 'file' %}
+<form class="context-ex" method="post">
+    <input required name="title" placeholder="Введите название..." value="{{dt['title']}}" class="step-title">
+    <br>
+    <textarea required name="text" placeholder="Введите текст..." class="ex-text edit-text">{{dt['text']}}</textarea>
+
+    <div class="file-apload-area">
+        <div class="st apload-img">🡅</div>
+        <input required name="file" type="file" class="st apload-bt-edit">
+    </div>
+
     <button type="submit" class="btn-send-ans">Сохранить</button>
 
 </form>
@@ -79,11 +114,52 @@
     new_step_menu.hidden = true;
 
     function newstep() {
+        var stl = document.getElementById('');
+        console.log();
         new_step_menu.hidden = false;
     }
 
     function clousemenu() {
         new_step_menu.hidden = true;
+    }
+
+    function addanstolist() {
+        var ansst = document.getElementById('new_ans_edit');
+        var ansls = document.getElementById('ans_edit_list');
+
+        if (ansst.value === '') {
+            return;
+        }
+
+        let newans = document.createElement('p');
+        newans.className = 'radio-ans';
+        newans.innerHTML = '<label><input class="radio-btn" name="answer" type="checkbox" value="nedzen"> ' + ansst.value + '</label>';
+
+        ansls.appendChild(newans);
+
+        let xhr = new XMLHttpRequest();
+        // адрес, куда мы отправим нашу JSON-строку
+        let url = myip + "/api";
+        // открываем соединение
+        xhr.open("POST", url, true);
+        // устанавливаем заголовок — выбираем тип контента, который отправится на сервер, в нашем случае мы явно пишем, что это JSON
+        xhr.setRequestHeader("Content-Type", "application/json");
+        // когда придёт ответ на наше обращение к серверу, мы его обработаем здесь
+        xhr.onreadystatechange = function() {
+            // если запрос принят и сервер ответил, что всё в порядке
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // выводим то, что ответил нам сервер — так мы убедимся, что данные он получил правильно
+                ansst.value = '';
+            }
+        };
+        // преобразуем наши данные JSON в строку
+        var data = JSON.stringify({
+            "method": "add_new_ans_in_step",
+            'step_id': document.location.pathname.split('/')[4] * 1,
+            'ans': ansst.value
+        });
+        // когда всё готово, отправляем JSON на сервер
+        xhr.send(data);
     }
 
     function createnewstep(str) {
