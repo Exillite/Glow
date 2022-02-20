@@ -25,17 +25,43 @@
     </div>
 </div>
 
-
-{% if dt['type'] == 'theory' %}
+{% if not steps %}
 <form class="context-ex" method="post">
-    <input placeholder="Введите название..." value="{{dt['title']}}" class="step-title">
-    <br>
-    <textarea placeholder="Введите текст..." class="ex-text edit-text">{{dt['text']}}</textarea>
 
-    <button class="btn-send-ans">Сохранить</button>
+    <div class="step-title">Здесь пока нет заданий.</div>
+    <br>
 
 </form>
-{% endif %}
+{% else %} {% if dt['type'] == 'theory' %}
+<form class="context-ex" method="post">
+    <input required name="title" placeholder="Введите название..." value="{{dt['title']}}" class="step-title">
+    <br>
+    <textarea required name="text" placeholder="Введите текст..." class="ex-text edit-text">{{dt['text']}}</textarea>
+
+    <button type="submit" class="btn-send-ans">Сохранить</button>
+
+</form>
+{% endif %} {% if dt['type'] == 'short_ans' %}
+<form class="context-ex" method="post">
+    <input required name="title" placeholder="Введите название..." value="{{dt['title']}}" class="step-title">
+    <br>
+    <textarea required name="text" placeholder="Введите условие..." class="ex-text edit-text">{{dt['text']}}</textarea>
+    <input required value="{{dt['correct_answer']}}" class="ex-input st" id="st" type="text" placeholder="Введите правильный ответ...">
+    <p></p>
+    <button type="submit" class="btn-send-ans">Сохранить</button>
+
+</form>
+{% endif %} {% if dt['type'] == 'short_ans' %}
+<form class="context-ex" method="post">
+    <input required name="title" placeholder="Введите название..." value="{{dt['title']}}" class="step-title">
+    <br>
+    <textarea required name="text" placeholder="Введите условие..." class="ex-text edit-text">{{dt['text']}}</textarea>
+    <input required value="{{dt['correct_answer']}}" class="ex-input st" id="st" type="text" placeholder="Введите правильный ответ...">
+    <p></p>
+    <button type="submit" class="btn-send-ans">Сохранить</button>
+
+</form>
+{% endif %} {% endif %}
 
 
 <script>

@@ -102,6 +102,7 @@ class Blocks(db.Model):
     one_answer = db.Column(db.Boolean)
     answers = db.Column(db.Text)
     path = db.Column(db.String(500))
+    correct_answer = db.Column(db.Text)
     example_in = db.Column(db.String(250))
     example_out = db.Column(db.String(250))
 
@@ -347,18 +348,25 @@ def edit_block(course_id, block_id, step_id):
     if request.cookies.get('user_token') is None:
         return redirect(url_for('login'))
     
+    if step_id == '-1':
+        bl_id = Blocks.query.filter_by(module_id=block_id).first()
+        if bl_id:
+            return redirect(str(bl_id.id))
+        else:
+            return render_template('edit_block.html', steps=[], nb=True)
+    
     blocks = Blocks.query.filter_by(module_id=block_id).all()
     stps = []
     for b in blocks:
         dic = {'id': b.id, 'is_ready': False}
         stps.append(dic)
-
+    
 
     blk = Blocks.query.filter_by(id=step_id).first()
     if blk.type == 'theory':
         dt = {'type': blk.type, 'title': blk.title, 'text': blk.text}
     elif blk.type == 'short_ans':
-        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text}
+        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'correct_answer': ""}
     elif blk.type == 'long_ans':
         dt = {'type': blk.type, 'title': blk.title, 'text': blk.text}
     elif blk.type == 'task_with_answers':
@@ -366,7 +374,7 @@ def edit_block(course_id, block_id, step_id):
     elif blk.type == 'file':
         dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'file_name': blk.path}
         
-    return render_template('edit_block.html', steps=stps, dt=dt)
+    return render_template('edit_block.html', steps=stps, dt=dt, nb=True)
 
 
 @app.route("/exercise")
@@ -602,7 +610,7 @@ def api():
     elif j['method'] == 'make_step':
         r = {}
         try:
-            b = Blocks(module_id=j['module_id'], type=j['type'])
+            b = Blocks(module_id=j['module_id'], type=j['type'], title="", text="", one_answer=True, answers="", path="", correct_answer="")
 
             db.session.add(b)
             db.session.flush()
