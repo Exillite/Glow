@@ -347,6 +347,37 @@ def edit_course(course_id):
 def edit_block(course_id, block_id, step_id):
     if request.cookies.get('user_token') is None:
         return redirect(url_for('login'))
+
+    
+    if request.method == 'POST':
+        blk = Blocks.query.filter_by(id=step_id).first()
+        if blk.type == 'theory':
+            t = request.form.get('title')
+            tx = request.form.get('text')
+            blk.title = t
+            blk.text = tx
+        elif blk.type == 'short_ans':
+            t = request.form.get('title')
+            tx = request.form.get('text')
+            blk.title = t
+            blk.text = tx
+            ra = request.form.get('correct_answer')
+            blk.correct_answer = ra
+        elif blk.type == 'long_ans':
+            t = request.form.get('title')
+            tx = request.form.get('text')
+            blk.title = t
+            blk.text = tx
+            ra = request.form.get('correct_answer')
+            blk.correct_answer = ra
+        elif blk.type == 'task_with_answers':
+            dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'is_one_ans': blk.one_answer, 'answers': blk.answers.split('#')}
+        elif blk.type == 'file':
+            dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'file_name': blk.path}
+
+        db.session.commit()
+
+
     
     if step_id == '-1':
         bl_id = Blocks.query.filter_by(module_id=block_id).first()
@@ -355,6 +386,7 @@ def edit_block(course_id, block_id, step_id):
         else:
             return render_template('edit_block.html', steps=[], nb=True)
     
+
     blocks = Blocks.query.filter_by(module_id=block_id).all()
     stps = []
     for b in blocks:
@@ -366,9 +398,9 @@ def edit_block(course_id, block_id, step_id):
     if blk.type == 'theory':
         dt = {'type': blk.type, 'title': blk.title, 'text': blk.text}
     elif blk.type == 'short_ans':
-        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'correct_answer': ""}
+        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'correct_answer': blk.correct_answer}
     elif blk.type == 'long_ans':
-        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text}
+        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'correct_answer': blk.correct_answer}
     elif blk.type == 'task_with_answers':
         dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'is_one_ans': blk.one_answer, 'answers': blk.answers.split('#')}
     elif blk.type == 'file':

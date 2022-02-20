@@ -46,7 +46,7 @@
     <input required name="title" placeholder="Введите название..." value="{{dt['title']}}" class="step-title">
     <br>
     <textarea required name="text" placeholder="Введите условие..." class="ex-text edit-text">{{dt['text']}}</textarea>
-    <input required name="correct_answer" value="{{dt['correct_answer']}}" class="ex-input st" id="st" type="text" placeholder="Введите правильный ответ...">
+    <input name="correct_answer" value="{{dt['correct_answer']}}" class="ex-input st" id="st" type="text" placeholder="Введите правильный ответ...">
     <p></p>
     <button type="submit" class="btn-send-ans">Сохранить</button>
 
@@ -74,7 +74,7 @@
 
 
         {% for a in dt['answers'] %} {% if a != '' %}
-        <p class="radio-ans"><label><input class="radio-btn" name="{{a}}" type="checkbox" value="nedzen"> {{a}}</label></p>
+        <p class="radio-ans"><label><input class="radio-btn" name="ans" value="{{a}}" type="checkbox"> {{a}}</label></p>
         {% endif %} {% endfor %}
 
     </div>
