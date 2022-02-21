@@ -552,10 +552,12 @@ body {
 
 .new-step-menu {
     position: absolute;
-    background-color: #00acee;
+    background-color: #adcce7;
     border-radius: 10px;
+    border: solid 2px black;
     width: 600px;
     height: 400px;
+    z-index: 100;
 }
 
 .new-step-type {
@@ -605,6 +607,7 @@ body {
     position: absolute;
     margin-top: 40px;
     font-size: 82px;
+    z-index: 0;
 }
 
 .apload-bt-edit {

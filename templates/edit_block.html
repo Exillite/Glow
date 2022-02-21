@@ -68,14 +68,18 @@
     <textarea required name="text" placeholder="Введите условие..." class="ex-text edit-text">{{dt['text']}}</textarea>
 
     <p style="font-size: 21px;">Отметьте правильные ответы.</p>
-    <input type="checkbox" style="font-size: 32px;"> Только один верный отет. <br>
+    {% if dt['is_one_asn'] %}
+    <input name="is_one_ans" type="checkbox" style="font-size: 32px;" checked> Только один верный отет. <br> {% else %}
+    <input name="is_one_ans" type="checkbox" style="font-size: 32px;"> Только один верный отет. <br> {% endif %}
     <div class="ans-list" id="ans_edit_list">
         <p class="radio-ans"><label>Добавте ответ: <input style="height: 30px; width: 65%; font-size: 21px;" id="new_ans_edit" type="text"><button type="button" onclick="addanstolist()" style="height: 30px; width: 30px; font-size: 22px;">+</button></label></p>
 
 
-        {% for a in dt['answers'] %} {% if a != '' %}
+        {% for a in dt['answers'] %} {% if a != '' %} {% if a not in dt['correct_answer'] %}
         <p class="radio-ans"><label><input class="radio-btn" name="ans" value="{{a}}" type="checkbox"> {{a}}</label></p>
-        {% endif %} {% endfor %}
+        {% else %}
+        <p class="radio-ans"><label><input class="radio-btn" name="ans" value="{{a}}" type="checkbox" checked> {{a}}</label></p>
+        {% endif %} {% endif %} {% endfor %}
 
     </div>
     <p></p>
@@ -83,15 +87,21 @@
 
 </form>
 {% endif %} {% if dt['type'] == 'file' %}
-<form class="context-ex" method="post">
+<form class="context-ex" method="post" enctype="multipart/form-data">
     <input required name="title" placeholder="Введите название..." value="{{dt['title']}}" class="step-title">
     <br>
     <textarea required name="text" placeholder="Введите текст..." class="ex-text edit-text">{{dt['text']}}</textarea>
 
     <div class="file-apload-area">
         <div class="st apload-img">🡅</div>
-        <input required name="file" type="file" class="st apload-bt-edit">
+        <input required type=file name=file class="st apload-bt-edit">
     </div>
+
+    {% if dt['file_name'] != '' %}
+    <div class="dwn-file" onclick="document.location='{{ url_for('download', filename=dt['file_name']) }}'">
+        <div class="file-name">{{dt['file_name']}}</div><img class="dwn-ic" src="https://img.icons8.com/pastel-glyph/64/000000/download--v1.png" />
+    </div>
+    {% endif %}
 
     <button type="submit" class="btn-send-ans">Сохранить</button>
 

@@ -371,12 +371,28 @@ def edit_block(course_id, block_id, step_id):
             ra = request.form.get('correct_answer')
             blk.correct_answer = ra
         elif blk.type == 'task_with_answers':
-            dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'is_one_ans': blk.one_answer, 'answers': blk.answers.split('#')}
+            t = request.form.get('title')
+            tx = request.form.get('text')
+            blk.title = t
+            blk.text = tx
+            is_one_ans = request.form.get('is_one_ans')
+            blk.one_answer = is_one_ans is not None
+            cor_ans_list = request.form.getlist('ans')
+            if len(cor_ans_list) > 0:
+                cor_ans = '#'.join(cor_ans_list)
+                blk.correct_answer = cor_ans
+
         elif blk.type == 'file':
-            dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'file_name': blk.path}
+            t = request.form.get('title')
+            tx = request.form.get('text')
+            blk.title = t
+            blk.text = tx
+            file = request.files['file']
+            filename = file.filename
+            file.save('apload_files/' + filename)
+            blk.path = filename
 
         db.session.commit()
-
 
     
     if step_id == '-1':
@@ -402,7 +418,7 @@ def edit_block(course_id, block_id, step_id):
     elif blk.type == 'long_ans':
         dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'correct_answer': blk.correct_answer}
     elif blk.type == 'task_with_answers':
-        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'is_one_ans': blk.one_answer, 'answers': blk.answers.split('#')}
+        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'is_one_ans': blk.one_answer, 'answers': blk.answers.split('#'), 'correct_answer': blk.correct_answer.split('#'), 'is_one_asn': blk.one_answer}
     elif blk.type == 'file':
         dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'file_name': blk.path}
         
@@ -468,7 +484,7 @@ def download(filename):
     # Appending app path to upload folder path within app root folder
     uploads = os.path.join(current_app.root_path, app.config['UPLOAD_FOLDER'])
     # Returning file from appended path
-    return send_from_directory(directory=r"C:\Users\Alexander\Desktop\glow\static\img", path=filename)
+    return send_from_directory(directory=r"apload_files", path=filename)
 
 
 @app.route('/api', methods=['GET', 'POST'])
@@ -642,7 +658,7 @@ def api():
     elif j['method'] == 'make_step':
         r = {}
         try:
-            b = Blocks(module_id=j['module_id'], type=j['type'], title="", text="", one_answer=True, answers="", path="", correct_answer="")
+            b = Blocks(module_id=j['module_id'], type=j['type'], title="", text="", one_answer=False, answers="", path="", correct_answer="")
 
             db.session.add(b)
             db.session.flush()
