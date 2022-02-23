@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/basestyle.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logoic.png')}}" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> {% if title %}
     <title>{{title}}</title>
     {% else %}
@@ -17,7 +17,7 @@
 <header>
     <nav class="navbar" id="navbar">
         <div id="marker"></div>
-        <a href="/courses">🎓Курсы</a>
+        <a href="/courses">🎓Учёба</a>
         <a href="/teach">👨‍🏫Преподавание</a>
         <a href="/login">👤Аккаунт</a>
     </nav>

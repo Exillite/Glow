@@ -1,8 +1,8 @@
 from calendar import c
+from distutils.command.build_scripts import first_line_re
 from lib2to3.pgen2 import token
 from re import T
 import os
-from turtle import title
 from flask import *
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,6 +10,7 @@ import DATA
 import sqlite3
 import question
 import random
+from zipfile import ZipFile
 
 import json
 
@@ -209,7 +210,6 @@ def cr():
     db.create_all()
     return 'OK'
 
-
 @app.route("/adminka")
 def adminka():
     db = get_db()
@@ -389,8 +389,23 @@ def edit_block(course_id, block_id, step_id):
             blk.text = tx
             file = request.files['file']
             filename = file.filename
-            file.save('apload_files/' + filename)
-            blk.path = filename
+            ffnn = filename.split('.')
+            nidd = 1
+            while 20:
+                if '.'.join(ffnn) in os.listdir('apload_files'):
+                    ffnn[0] += str(nidd)
+                    nidd += 1
+                else:
+                    break
+
+            file.save('apload_files/' + '.'.join(ffnn))
+
+            zipObj = ZipFile(f'apload_files/{".".join(ffnn)}.zip', 'w')
+            zipObj.write('apload_files/' + ".".join(ffnn))
+            zipObj.close()
+            os.remove('apload_files/' + ".".join(ffnn))
+
+            blk.path = ".".join(ffnn)
 
         db.session.commit()
 
@@ -423,6 +438,88 @@ def edit_block(course_id, block_id, step_id):
         dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'file_name': blk.path}
         
     return render_template('edit_block.html', steps=stps, dt=dt, nb=True)
+
+
+@app.route("/course/<course_id>/<block_id>/<step_id>", methods=['GET', 'POST'])
+def block(course_id, block_id, step_id):
+    if request.cookies.get('user_token') is None:
+        return redirect(url_for('login'))
+
+    
+    # if request.method == 'POST':
+    #     blk = Blocks.query.filter_by(id=step_id).first()
+    #     if blk.type == 'theory':
+    #         t = request.form.get('title')
+    #         tx = request.form.get('text')
+    #         blk.title = t
+    #         blk.text = tx
+    #     elif blk.type == 'short_ans':
+    #         t = request.form.get('title')
+    #         tx = request.form.get('text')
+    #         blk.title = t
+    #         blk.text = tx
+    #         ra = request.form.get('correct_answer')
+    #         blk.correct_answer = ra
+    #     elif blk.type == 'long_ans':
+    #         t = request.form.get('title')
+    #         tx = request.form.get('text')
+    #         blk.title = t
+    #         blk.text = tx
+    #         ra = request.form.get('correct_answer')
+    #         blk.correct_answer = ra
+    #     elif blk.type == 'task_with_answers':
+    #         t = request.form.get('title')
+    #         tx = request.form.get('text')
+    #         blk.title = t
+    #         blk.text = tx
+    #         is_one_ans = request.form.get('is_one_ans')
+    #         blk.one_answer = is_one_ans is not None
+    #         cor_ans_list = request.form.getlist('ans')
+    #         if len(cor_ans_list) > 0:
+    #             cor_ans = '#'.join(cor_ans_list)
+    #             blk.correct_answer = cor_ans
+
+    #     elif blk.type == 'file':
+    #         t = request.form.get('title')
+    #         tx = request.form.get('text')
+    #         blk.title = t
+    #         blk.text = tx
+    #         file = request.files['file']
+    #         filename = file.filename
+    #         file.save('apload_files/' + filename)
+    #         blk.path = filename
+
+    #     db.session.commit()
+
+    
+    if step_id == '-1':
+        bl_id = Blocks.query.filter_by(module_id=block_id).first()
+        if bl_id:
+            return redirect(str(bl_id.id))
+        else:
+            return render_template('block.html', steps=[], nb=True)
+    
+
+    blocks = Blocks.query.filter_by(module_id=block_id).all()
+    stps = []
+    for b in blocks:
+        dic = {'id': b.id, 'is_ready': False}
+        stps.append(dic)
+    
+
+    blk = Blocks.query.filter_by(id=step_id).first()
+    if blk.type == 'theory':
+        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text}
+    elif blk.type == 'short_ans':
+        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'correct_answer': blk.correct_answer}
+    elif blk.type == 'long_ans':
+        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'correct_answer': blk.correct_answer}
+    elif blk.type == 'task_with_answers':
+        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'is_one_ans': blk.one_answer, 'answers': blk.answers.split('#'), 'correct_answer': blk.correct_answer.split('#'), 'is_one_asn': blk.one_answer}
+    elif blk.type == 'file':
+        dt = {'type': blk.type, 'title': blk.title, 'text': blk.text, 'file_name': blk.path}
+        
+    return render_template('block.html', steps=stps, dt=dt, nb=True)
 
 
 @app.route("/exercise")
@@ -484,6 +581,7 @@ def download(filename):
     # Appending app path to upload folder path within app root folder
     uploads = os.path.join(current_app.root_path, app.config['UPLOAD_FOLDER'])
     # Returning file from appended path
+    filename += '.zip'
     return send_from_directory(directory=r"apload_files", path=filename)
 
 

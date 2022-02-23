@@ -1,0 +1,205 @@
+{% extends 'base.html' %} {% block content %} {{ super() }}
+<div class="steps-view st" id="" id="st">
+
+    {% for s in steps %} {% if s['is_ready'] %}
+    <button onclick="gostep({{s['id']}})" class="step active"></button> {% else %}
+    <button onclick="gostep({{s['id']}})" class="step notactive"></button> {% endif %} {% endfor %}
+
+    <button onclick="newstep()" class="step notactive">+</button>
+</div>
+
+<div id="new_step_menu" class="st new-step-menu">
+    <button onclick="clousemenu()" class="exit-new-step-menu">✖</button>
+    <div class="btn-new-step-group">
+        <div class="new-step-title">Выберите тип нового задания:</div>
+        <br>
+        <button onclick="createnewstep('theory')" class="st new-step-type">Теория</button>
+        <br>
+        <button onclick="createnewstep('short_ans')" class="st new-step-type">Ввод ответа</button>
+        <br>
+        <button onclick="createnewstep('long_ans')" class="st new-step-type">Ввод текста</button>
+        <br>
+        <button onclick="createnewstep('task_with_answers')" class="st new-step-type">Тест</button>
+        <br>
+        <button onclick="createnewstep('file')" class="st new-step-type">Прикрепить файл</button>
+    </div>
+</div>
+
+{% if not steps %}
+<form class="context-ex" method="post">
+
+    <div class="step-title">Здесь пока нет заданий.</div>
+    <br>
+
+</form>
+{% else %} {% if dt['type'] == 'theory' %}
+<form class="context-ex" method="post">
+   
+    <h1 class="step-title">{{dt['title']}}</h1>
+
+    <div class="ex-text">{{dt['text']}}</div>
+
+
+</form>
+{% endif %} {% if dt['type'] == 'short_ans' %}
+<form class="context-ex" method="post">
+
+    <h1 class="step-title">{{dt['title']}}</h1>
+
+    <div class="ex-text">{{dt['text']}}</div>
+
+    <input class="ex-input st" id="st" type="text" placeholder="Введите свой ответ...">
+    <p></p>
+    <button class="btn-send-ans">Отправить</button>
+
+</form>
+{% endif %} {% if dt['type'] == 'long_ans' %}
+<form class="context-ex" method="post">
+    
+    <h1 class="step-title">{{dt['title']}}</h1>
+
+    <div class="ex-text">{{dt['text']}}</div>
+
+    <textarea class="ex-input long-input st" id="st" placeholder="Введите свой ответ..."></textarea>
+    <p></p>
+    <button class="btn-send-ans">Отправить</button>
+
+</form>
+{% endif %} {% if dt['type'] == 'task_with_answers' %}
+<form class="context-ex" method="post">
+    
+    <h1 class="step-title">{{dt['title']}}</h1>
+
+    <div class="ex-text">{{dt['text']}}</div>
+
+    {% if not dt['is_one_ans'] %}
+    <div class="ans-list">
+        {% for a in dt['answers'] %} {% if a != '' %} {% if a not in dt['correct_answer'] %}
+        <p class="radio-ans"><label><input class="radio-btn" name="ans" value="{{a}}" type="checkbox"> {{a}}</label></p>
+        {% else %}
+        <p class="radio-ans"><label><input class="radio-btn" name="ans" value="{{a}}" type="checkbox"> {{a}}</label></p>
+        {% endif %} {% endif %} {% endfor %}
+    </div>
+    {% else %}
+    <div class="ans-list">
+        {% for a in dt['answers'] %} {% if a != '' %} {% if a not in dt['correct_answer'] %}
+        <p class="radio-ans"><label><input class="radio-btn" name="ans" value="{{a}}" type="radio"> {{a}}</label></p>
+        {% else %}
+        <p class="radio-ans"><label><input class="radio-btn" name="ans" value="{{a}}" type="radio"> {{a}}</label></p>
+        {% endif %} {% endif %} {% endfor %}
+    </div>
+    {% endif %}
+
+    <p></p>
+    <button class="btn-send-ans">Отправить</button>
+
+</form>
+{% endif %} {% if dt['type'] == 'file' %}
+<form class="context-ex" method="post" enctype="multipart/form-data">
+    <h1 class="step-title">{{dt['title']}}</h1>
+
+    <div class="ex-text">{{dt['text']}}</div>
+
+    {% if dt['file_name'] != '' %}
+    <div class="dwn-file" onclick="document.location='{{ url_for('download', filename=dt['file_name']) }}'">
+        <div class="file-name">{{dt['file_name']}}</div><img class="dwn-ic" src="https://img.icons8.com/pastel-glyph/64/000000/download--v1.png" />
+    </div>
+    {% endif %}
+
+    <button type="submit" class="btn-send-ans">Сохранить</button>
+
+</form>
+{% endif %} {% endif %}
+
+
+<script>
+    var stpv = document.getElementsByClassName('st');
+    for (const el of stpv) {
+        el.style = "left: calc(50% - " + el.offsetWidth + "px / 2);";
+    }
+
+    function gostep(id) {
+        var st = document.location.href;
+        document.location.href = st.slice(0, st.lastIndexOf('/')) + "/" + id;
+    }
+
+    var new_step_menu = document.getElementById('new_step_menu');
+    new_step_menu.hidden = true;
+
+    function newstep() {
+        var stl = document.getElementById('');
+        console.log();
+        new_step_menu.hidden = false;
+    }
+
+    function clousemenu() {
+        new_step_menu.hidden = true;
+    }
+
+    function addanstolist() {
+        var ansst = document.getElementById('new_ans_edit');
+        var ansls = document.getElementById('ans_edit_list');
+
+        if (ansst.value === '') {
+            return;
+        }
+
+        let newans = document.createElement('p');
+        newans.className = 'radio-ans';
+        newans.innerHTML = '<label><input class="radio-btn" name="answer" type="checkbox" value="nedzen"> ' + ansst.value + '</label>';
+
+        ansls.appendChild(newans);
+
+        let xhr = new XMLHttpRequest();
+        // адрес, куда мы отправим нашу JSON-строку
+        let url = myip + "/api";
+        // открываем соединение
+        xhr.open("POST", url, true);
+        // устанавливаем заголовок — выбираем тип контента, который отправится на сервер, в нашем случае мы явно пишем, что это JSON
+        xhr.setRequestHeader("Content-Type", "application/json");
+        // когда придёт ответ на наше обращение к серверу, мы его обработаем здесь
+        xhr.onreadystatechange = function() {
+            // если запрос принят и сервер ответил, что всё в порядке
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // выводим то, что ответил нам сервер — так мы убедимся, что данные он получил правильно
+                ansst.value = '';
+            }
+        };
+        // преобразуем наши данные JSON в строку
+        var data = JSON.stringify({
+            "method": "add_new_ans_in_step",
+            'step_id': document.location.pathname.split('/')[4] * 1,
+            'ans': ansst.value
+        });
+        // когда всё готово, отправляем JSON на сервер
+        xhr.send(data);
+    }
+
+    function createnewstep(str) {
+        let xhr = new XMLHttpRequest();
+        // адрес, куда мы отправим нашу JSON-строку
+        let url = myip + "/api";
+        // открываем соединение
+        xhr.open("POST", url, true);
+        // устанавливаем заголовок — выбираем тип контента, который отправится на сервер, в нашем случае мы явно пишем, что это JSON
+        xhr.setRequestHeader("Content-Type", "application/json");
+        // когда придёт ответ на наше обращение к серверу, мы его обработаем здесь
+        xhr.onreadystatechange = function() {
+            // если запрос принят и сервер ответил, что всё в порядке
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // выводим то, что ответил нам сервер — так мы убедимся, что данные он получил правильно
+                location.reload();
+            }
+        };
+        // преобразуем наши данные JSON в строку
+        var data = JSON.stringify({
+            "method": "make_step",
+            'module_id': document.location.pathname.split('/')[3] * 1,
+            'type': str
+        });
+        // когда всё готово, отправляем JSON на сервер
+        xhr.send(data);
+    }
+</script>
+
+{%endblock %}
