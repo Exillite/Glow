@@ -4,8 +4,6 @@
     {% for s in steps %} {% if s['is_ready'] %}
     <button onclick="gostep({{s['id']}})" class="step active"></button> {% else %}
     <button onclick="gostep({{s['id']}})" class="step notactive"></button> {% endif %} {% endfor %}
-
-    <button onclick="newstep()" class="step notactive">+</button>
 </div>
 
 <div id="new_step_menu" class="st new-step-menu">
