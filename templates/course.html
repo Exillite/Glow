@@ -11,7 +11,7 @@
 
 
             {% for m in moduls %}
-            <div class="block-item">
+            <div onclick="goBlock({{m['id']}})" class="block-item">
                 <div class="block-item-name">{{m['name']}}</div>
             </div>
             {% endfor %}
@@ -19,6 +19,12 @@
         </div>
     </div>
 </div>
+
+<script>
+    function goBlock(id) {
+        document.location.href = document.location.pathname + "/" + id + "/-1"
+    }
+</script>
 
 <script src="{{ url_for('static', filename='js/blocks.js')}}"></script>
 {%endblock %}
