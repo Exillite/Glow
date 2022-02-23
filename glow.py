@@ -2,7 +2,6 @@ from calendar import c
 from lib2to3.pgen2 import token
 from re import T
 import os
-from turtle import title
 from flask import *
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
