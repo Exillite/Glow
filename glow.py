@@ -11,6 +11,7 @@ import sqlite3
 import question
 import random
 from zipfile import ZipFile
+from flask_mail import Mail
 
 import json
 
@@ -23,6 +24,7 @@ from email.mime.text import MIMEText  # Текст/HTML
 # from email.mime.image import MIMEImage  # Изображения
 #HVoW%kA%3q*y
 app = Flask(__name__)
+mail = Mail(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///glow.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -118,6 +120,7 @@ class User2Course(db.Model):
 
 
 def testemail(email, tok):
+    print('TEST EMAIL')
     addr_from = "noreply@exillite.xyz"  # Адресат
     addr_to = email  # Получатель
     password = DATA.EMAIL_PASSWORD  # Пароль (я знаю, что это хардкод)
@@ -167,13 +170,14 @@ background-color: #C4DFE6;
 """
     msg.attach(MIMEText(html, 'html', 'utf-8'))  # Добавляем в сообщение HTML-фрагмент
 
-    server = smtplib.SMTP('mail.exillite.xyz', 587)  # Создаем объект SMTP
+    server = smtplib.SMTP('smtp.mail.ru', 465)  # Создаем объект SMTP
     server.set_debuglevel(True)  # Включаем режим отладки - если отчет не нужен, строку можно закомментировать
     server.starttls()  # Начинаем шифрованный обмен по TLS
     server.login(addr_from, password)  # Получаем доступ
     server.send_message(msg)  # Отправляем сообщение
     server.quit()
-
+    print('END EMAIL')
+    return
 
 
 
@@ -194,7 +198,8 @@ def alreg():
 
 @app.route("/al")
 def alert():
-    return render_template('testcoockies.html', nb=True, is_logined=True)
+
+    return render_template('testcoockies.html', nb=True)
 
 
 @app.route("/con/<tok>")
@@ -522,6 +527,10 @@ def block(course_id, block_id, step_id):
     return render_template('block.html', steps=stps, dt=dt, nb=True)
 
 
+@app.route("/t")
+def t():
+    return render_template('t.html')
+
 @app.route("/exercise")
 def exercisepage():
     if request.cookies.get('user_token') is None:
@@ -562,7 +571,6 @@ def add_course():
 
     if request.method == 'POST':
         code = request.form.get('code')
-
         
         courses = Courses.query.filter_by(id=842859-int(code)).all()
         courses_test = User2Course.query.filter_by(course_id=842859-int(code), user_id=student_id).all()
@@ -601,6 +609,7 @@ def api():
             db.session.flush()
             db.session.commit()
             #testemail(j['email'], token)
+            print('OOOKKKK')
             return 'OK'
         except Exception as e:
             print('!!>>>>' + str(e))
@@ -614,14 +623,13 @@ def api():
             u = Users.query.filter_by(email=j['email']).first()
 
             if check_password_hash(u.password, j['password']):
-                '''
-                if j['is_active']:
-                    if j['stay']:
-                        pass
-                    return 'id=' + u.token
-                else:
-                    return 'NOTACTIVE'
-                '''
+
+                # if j['is_active']:
+                #     if j['stay']:
+                #         pass
+                #     return 'id=' + u.token
+                # else:
+                #     return 'NOTACTIVE'
                 return 'id=' + u.token
             else:
                 return 'PAS'

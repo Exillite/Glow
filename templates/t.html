@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+      
+        script.addEventListener("load", function (event) {
+          const config = {
+            name: "Сашка",
+            meetingId: "milkyway",
+            apiKey: "861faa9a-dab3-455d-bbdf-707333b838d9",
+      
+            containerId: null,
+      
+            micEnabled: true,
+            webcamEnabled: true,
+            participantCanToggleSelfWebcam: true,
+            participantCanToggleSelfMic: true,
+      
+            chatEnabled: true,
+            screenShareEnabled: true,
+            whiteboardEnabled: true,
+  permissions: {
+    drawOnWhiteboard: true,
+    toggleWhiteboard: true,
+  },
+      
+            /*
+      
+           Other Feature Properties
+            
+            */
+          };
+      
+          const meeting = new VideoSDKMeeting();
+          meeting.init(config);
+        });
+      
+        script.src =
+          "https://sdk.videosdk.live/rtc-js-prebuilt/0.1.29/rtc-js-prebuilt.js";
+        document.getElementsByTagName("head")[0].appendChild(script);
+      </script>
+</body>
+</html>
