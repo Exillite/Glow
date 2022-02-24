@@ -136,3 +136,4 @@ glow.ini
 glow.sock
 wsgi.py
 glow/
+glow.db
