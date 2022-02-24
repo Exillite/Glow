@@ -141,6 +141,7 @@ function getReg(ret) {
             notify("error", "Ошибка!");
             break;
         case "OK":
+            console.log('OOOKKK');
             window.location.href = myip + '/';
             break;
         default:
