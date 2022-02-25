@@ -1,0 +1,86 @@
+{% extends 'base.html' %} {% block content %} {{ super() }}
+
+
+
+<div class="context-ex" style="border: 1px solid black; height: 95vh; border-radius: 3px;">
+    <div class="chat-top">
+        {{dt['course_name']}}
+    </div>
+
+
+    <div class="msgs-box" id="msg_box">
+
+
+        {% for m in messages %}
+
+        {% if m['u'] %}
+        <div class="chat-msg">
+            <div class="msg-chat-text" style="margin-left: 300px;">
+                {{m['text']}} 
+            </div>
+        </div>
+        {% else %}
+
+        <div class="chat-msg">
+            <div class="msg-chat-text">
+                <p style="font-size: 18px; color: rgb(85, 81, 81); padding-left: 10px;">{{ m['name'] }}</p>
+                {{m['text']}} 
+            </div>
+        </div>
+
+        {% endif %}
+
+        {% endfor %}
+
+    </div>
+
+
+    <div class="msg-imput-box">
+        <input class="msg-chat-input" id="mesg_input" type="text"> <button onclick='send_msg()' class="send-chat-btn">Отправить</button>
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+    var socket = io();
+    var mesg_input = document.getElementById('mesg_input');
+    var msg_box = document.getElementById('msg_box');
+    var user_id = {{dt["user_id"]}};
+    var user_name = "{{dt["user_name"]}}";
+
+    msg_box.scrollTop = 99999999;
+
+    function GC(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+    socket.on('connect', function() {
+        socket.emit('connect_room', {'room': '{{dt["course_id"]}}'});
+    });
+
+    socket.on('receive_message', function (data) {
+        console.log(data);
+
+        let new_mes = document.createElement('div');
+        new_mes.className = 'chat-msg';
+        
+        if (!(user_id === data.sender_id)) {
+            new_mes.innerHTML = `<div class="msg-chat-text"><p style="font-size: 18px; color: rgb(85, 81, 81); padding-left: 10px;">${data.name}</p>${data.text}</div>`;
+        } else {
+            new_mes.innerHTML = `<div class="chat-msg"><div class="msg-chat-text" style="margin-left: 300px;">${data.text}</div></div>`;
+        }
+        msg_box.appendChild(new_mes);
+    });
+
+    function send_msg(){
+        socket.emit('send_msg', {'sender_id': user_id, 'text': mesg_input.value, 'room': '{{dt["course_id"]}}', 'name': user_name});
+        mesg_input.value = "";
+    }
+
+</script>
+
+{%endblock %}

@@ -3,6 +3,7 @@ from distutils.command.build_scripts import first_line_re
 from lib2to3.pgen2 import token
 from re import T
 import os
+from unicodedata import name
 from flask import *
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,7 +12,8 @@ import sqlite3
 import question
 import random
 from zipfile import ZipFile
-from flask_mail import Mail
+#from flask_mail import Mail
+from flask_socketio import *
 
 import json
 
@@ -24,12 +26,18 @@ from email.mime.text import MIMEText  # Текст/HTML
 # from email.mime.image import MIMEImage  # Изображения
 #HVoW%kA%3q*y
 app = Flask(__name__)
-mail = Mail(app)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
+#mail = Mail(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///glow.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 app.config['UPLOAD_FOLDER'] = 'C:\\Users\\Alexander\\Desktop\\low\\static\\img'
+
+
+conf_id_list = []
+
 
 quests2st = []
 quests2st.append(question.Qeston2Students('1', 'Нравится ли вам, как организован формат дистанционного обучения в вашей школе?', ['Да', 'Скорее да, чем нет', 'Скорее нет, чем да', 'Нет']))
@@ -119,6 +127,13 @@ class User2Course(db.Model):
     course_id = db.Column(db.Integer)
 
 
+class Messeges(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    course_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
+    text = db.Column(db.Text)
+
+
 def testemail(email, tok):
     print('TEST EMAIL')
     addr_from = "noreply@exillite.xyz"  # Адресат
@@ -202,6 +217,66 @@ def alert():
     return render_template('testcoockies.html', nb=True)
 
 
+
+@app.route("/chat/<id>")
+def chat(id):
+    if request.cookies.get('user_token') is None:
+        return redirect(url_for('login'))
+    token = request.cookies.get('user_token')
+
+    usr = Users.query.filter_by(token=token).first()
+    c = Courses.query.filter_by(id=usr.id).first()
+
+    dt = {}
+
+    dt['course_id'] = id
+    dt['course_name'] = c.name
+    dt['user_id'] = usr.id
+    dt['user_name'] = usr.name + ' ' + usr.surname
+
+    msgs = [{'name': 'alex', 'text': 'f jfjasdofuhhd safh iuhas', 'u': False}, {'name': 'alex', 'text': 'f jfjasdofuhhd safh iuhas', 'u': True}, {'name': 'alex', 'text': 'f jfjasdofuhhd safh iuhas', 'u': False}]
+
+    ms = Messeges.query.filter_by(course_id=id).all()
+
+    for m in ms:
+        d = {}         
+        u = Users.query.filter_by(id=m.user_id).first()
+        d['name'] = u.name + ' ' + u.surname
+        d['text'] = m.text
+        if m.user_id == usr.id:
+            d['u'] = True
+        else:
+            d['u'] = False
+
+        msgs.append(d)
+
+
+    return render_template('chat.html', messages=msgs, dt=dt, nb=True)
+
+
+@socketio.on('connect_room')
+def handle_message(data):
+    room = data['room']
+    join_room(room)
+    print(str(data))
+
+
+@socketio.on('leave_room')
+def handle_message(data):
+    room = data['room']
+    leave_room(room)
+    print(str(data))
+
+
+@socketio.on('send_msg')
+def handle_send_message_event(data):
+    emit('receive_message', data, room=data['room'])
+    db.session.add(Messeges(course_id=int(data['room']), user_id=int(data['sender_id']), text=data['text']))
+    db.session.flush()
+    db.session.commit()
+    print(str(data))
+
+
 @app.route("/con/<tok>")
 def con(tok):
     f = Users.query.filter_by(token=tok).first()
@@ -258,7 +333,7 @@ def course(id):
     course_name = this_course.name
     course_description = this_course.description
     
-    return render_template('course.html', course_name=course_name, course_description=course_description, moduls=mdls, nb=True, is_logined=True)
+    return render_template('course.html', course_id=id, course_name=course_name, course_description=course_description, moduls=mdls, nb=True, is_logined=True)
 
 @app.route("/questions", methods=["POST", "GET"])
 def questions():
@@ -346,7 +421,7 @@ def edit_course(course_id):
     course_name = this_course.name
     course_description = this_course.description
 
-    return render_template('course_edit.html', course_name=course_name, course_description=course_description, moduls=mdls, course_code=course_code, nb=True, is_logined=True)
+    return render_template('course_edit.html', course_id=course_id, course_name=course_name, course_description=course_description, moduls=mdls, course_code=course_code, nb=True, is_logined=True)
 
 @app.route("/edit_course/<course_id>/<block_id>/<step_id>", methods=['GET', 'POST'])
 def edit_block(course_id, block_id, step_id):
@@ -582,6 +657,32 @@ def add_course():
         return redirect(url_for('courses'))
 
     return render_template('addcourse.html', nb=True, is_logined=True)
+
+
+
+@app.route('/course_call/<cid>')
+def course_call(cid):
+    if request.cookies.get('user_token') is None:
+        return redirect(url_for('login'))
+
+    token = request.cookies.get('user_token')
+    usr = Users.query.filter_by(token=token).first()
+    if len(User2Course.query.filter_by(user_id=usr.id, course_id=cid).all()) == 0:
+        return redirect(url_for('courses'))
+    
+    cours = Courses.query.filter_by(id=cid).first()
+    
+
+    dt = {'name': f'{usr.name} {usr.surname}', 'conf_id': cid, 'course_id': cid, 'course_name': cours.name}
+
+    return render_template('t.html', dt=dt)
+
+
+
+@app.route('/logo')
+def logo():
+    return url_for('static', filename='img/logoic.png')
+
 
 
 @app.route('/uploads/<path:filename>', methods=['GET', 'POST'])

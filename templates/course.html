@@ -4,12 +4,11 @@
         <div class="course-info">
             <div class="course-name">{{course_name}}</div>
             <div class="course-descrption">{{course_description}}</div>
+            <button onclick="">Открыть чат</button>
         </div>
 
 
         <div class="blocks-list">
-
-
             
             {% for m in moduls %}
             <div onclick="goBlock({{m['id']}})" class="block-item">
@@ -24,6 +23,10 @@
 <script>
     function goBlock(id) {
         document.location.href = document.location.pathname + "/" + id + "/-1"
+    }
+
+    function openCht() {
+        document.location.href = '/chat/{{course_id}}';
     }
 </script>
 
